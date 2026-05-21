@@ -1,4 +1,4 @@
-/* ====== Livro de Orçamento da Fazenda Rockefeller ======
+/* ====== Livro de Orçamento — Família Rockefeller ======
    Calculadora estática, 100% client-side. */
 
 const PRODUTOS = [
@@ -90,12 +90,15 @@ function semAcento(s) {
     return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 }
 
-const STORAGE_KEY = "fazenda-rockefeller-pedido-v1";
+const STORAGE_KEY = "fazenda-rockefeller-pedido-v2";
+const MAX_RECENTES = 6;
 
 const estado = carregar() || {
     itens: [],
     descontoPercent: 0,
+    recentes: [],
 };
+if (!Array.isArray(estado.recentes)) estado.recentes = [];
 
 function carregar() {
     try {
@@ -119,12 +122,21 @@ function indiceProduto(nome) {
     return PRODUTOS.findIndex(p => p.nome === nome);
 }
 
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+        ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+function registrarRecente(nome) {
+    estado.recentes = [nome, ...estado.recentes.filter(n => n !== nome)].slice(0, MAX_RECENTES);
+}
+
 // ============ COMBOBOX (busca + lista filtrada) ============
 const combo = {
     aberto: false,
     indiceAtivo: -1,
-    selecionado: null,  // índice em PRODUTOS
-    filtrados: [],      // [{tipo:'cat',nome} | {tipo:'item',produtoIdx,produto}]
+    selecionado: null,
+    filtrados: [],
 };
 
 function filtrarProdutos(termo) {
@@ -133,7 +145,6 @@ function filtrarProdutos(termo) {
         ? PRODUTOS.filter(p => semAcento(p.nome).includes(q))
         : PRODUTOS.slice();
 
-    // Agrupa por categoria preservando ORDEM_CATEGORIAS
     const lista = [];
     for (const cat of ORDEM_CATEGORIAS) {
         const doGrupo = itensFiltrados.filter(p => p.categoria === cat);
@@ -146,19 +157,18 @@ function filtrarProdutos(termo) {
     return lista;
 }
 
+function itensFiltradosOnly() {
+    return combo.filtrados.filter(r => r.tipo === "item");
+}
+
 function renderListaCombobox() {
     const ul = $("produto-lista");
     if (combo.filtrados.length === 0) {
         ul.innerHTML = `<li class="combo-vazio">Nenhum produto encontrado.</li>`;
         return;
     }
-    // Filtra apenas os "item" para indexação ativa
-    const itemsOnly = combo.filtrados
-        .map((row, i) => ({ row, i }))
-        .filter(({ row }) => row.tipo === "item");
-
     let posItem = -1;
-    ul.innerHTML = combo.filtrados.map((row, i) => {
+    ul.innerHTML = combo.filtrados.map((row) => {
         if (row.tipo === "cat") {
             return `<li class="combo-cat" role="presentation">${escapeHtml(row.nome)}</li>`;
         }
@@ -174,7 +184,6 @@ function renderListaCombobox() {
         `;
     }).join("");
 
-    // Scroll para item ativo
     const ativo = ul.querySelector(".combo-item.ativo");
     if (ativo) ativo.scrollIntoView({ block: "nearest" });
 }
@@ -193,10 +202,6 @@ function fecharCombobox() {
     $("produto-lista").hidden = true;
     $("produto-busca").setAttribute("aria-expanded", "false");
     $("combobox").classList.remove("aberto");
-}
-
-function itensFiltradosOnly() {
-    return combo.filtrados.filter(r => r.tipo === "item");
 }
 
 function selecionarProduto(produtoIdx) {
@@ -260,13 +265,13 @@ function inicializarCombobox() {
         }
     });
 
-    toggle.addEventListener("click", () => {
+    toggle.addEventListener("mousedown", (e) => {
+        e.preventDefault();
         if (combo.aberto) { fecharCombobox(); }
         else { atualizar(); abrirCombobox(); input.focus(); }
     });
 
     ul.addEventListener("mousedown", (e) => {
-        // mousedown (não click) para evitar perder foco antes
         const li = e.target.closest(".combo-item");
         if (!li) return;
         e.preventDefault();
@@ -279,9 +284,31 @@ function inicializarCombobox() {
     });
 }
 
+// ============ RECENTES ============
+function renderRecentes() {
+    const wrap = $("recentes-wrap");
+    const chips = $("recentes-chips");
+    if (estado.recentes.length === 0) {
+        wrap.hidden = true;
+        return;
+    }
+    wrap.hidden = false;
+    chips.innerHTML = estado.recentes.map(nome => {
+        const idx = indiceProduto(nome);
+        if (idx < 0) return "";
+        return `
+            <button type="button" class="chip-recente" data-recente-idx="${idx}" role="listitem"
+                    aria-label="Selecionar ${escapeHtml(nome)}">
+                <span class="star" aria-hidden="true">★</span>
+                <span>${escapeHtml(nome)}</span>
+            </button>
+        `;
+    }).join("");
+}
+
+// ============ ITEM (CRUD) ============
 function adicionarItem() {
     if (combo.selecionado == null) {
-        // Tenta resolver pelo texto digitado: match exato (sem acento)
         const termo = semAcento($("produto-busca").value.trim());
         if (termo) {
             const match = PRODUTOS.findIndex(p => semAcento(p.nome) === termo);
@@ -296,7 +323,6 @@ function adicionarItem() {
     const qtd = Math.max(1, Math.floor(parseFloat($("qtd-input").value) || 1));
     const p = PRODUTOS[combo.selecionado];
 
-    // Se já existe, soma a quantidade
     const existente = estado.itens.find(it => it.produtoId === p.nome);
     if (existente) {
         existente.quantidade += qtd;
@@ -304,9 +330,11 @@ function adicionarItem() {
         estado.itens.push({
             produtoId: p.nome,
             quantidade: qtd,
-            precoUnit: p.max,  // começa no máximo
+            precoUnit: p.max,
         });
     }
+    registrarRecente(p.nome);
+
     $("qtd-input").value = 1;
     $("produto-busca").value = "";
     combo.selecionado = null;
@@ -336,8 +364,8 @@ function atualizarPreco(idx, valor) {
     if (isNaN(v)) v = p.max;
     const original = v;
     v = clamp(v, p.min, p.max);
-    item.precoUnit = v;
-    item._aviso = (original !== v);
+    item.precoUnit = Math.round(v * 100) / 100;
+    item._aviso = (Math.abs(original - v) > 0.001);
     salvar();
     render();
 }
@@ -350,7 +378,6 @@ function calcTotais() {
         const p = PRODUTOS[indiceProduto(it.produtoId)];
         minTotal += p.min * it.quantidade;
     }
-    // desconto máximo permitido (em %) tal que total >= minTotal
     let descMaxPct = 100;
     if (subtotal > 0) {
         descMaxPct = Math.max(0, (1 - minTotal / subtotal) * 100);
@@ -377,23 +404,42 @@ function render() {
             const sub = it.precoUnit * it.quantidade;
             const warnClass = it._aviso ? "preco-warning" : "";
             return `
-                <div class="item-row">
+                <div class="item-row" role="group" aria-label="${escapeHtml(p.nome)}">
                     <div class="nome">
                         ${escapeHtml(p.nome)}
                         <small>min ${fmt(p.min)} · max ${fmt(p.max)}</small>
                     </div>
-                    <div class="qtd-wrap">
-                        <input type="number" min="1" step="1" value="${it.quantidade}"
-                            data-acao="qtd" data-idx="${idx}" aria-label="Quantidade">
+                    <button class="btn-remover" data-acao="remover" data-idx="${idx}"
+                            title="Remover ${escapeHtml(p.nome)}" aria-label="Remover ${escapeHtml(p.nome)}">✕</button>
+
+                    <div class="item-controles">
+                        <div class="col-qtd">
+                            <label for="qtd-${idx}">Qtd</label>
+                            <input type="number" id="qtd-${idx}" min="1" step="1" value="${it.quantidade}"
+                                inputmode="numeric" data-acao="qtd" data-idx="${idx}">
+                        </div>
+                        <div class="col-preco">
+                            <label for="preco-${idx}">Preço unitário</label>
+                            <div class="preco-com-slider">
+                                <div class="preco-inputs">
+                                    <input type="number" id="preco-${idx}" min="${p.min}" max="${p.max}" step="0.01"
+                                        value="${it.precoUnit.toFixed(2)}" inputmode="decimal"
+                                        class="${warnClass}"
+                                        data-acao="preco" data-idx="${idx}">
+                                    <input type="range" class="preco-slider" min="${p.min}" max="${p.max}" step="0.01"
+                                        value="${it.precoUnit.toFixed(2)}"
+                                        aria-label="Ajustar preço de ${escapeHtml(p.nome)}"
+                                        data-acao="preco-slider" data-idx="${idx}">
+                                </div>
+                                <div class="preco-meta">
+                                    <span class="min">min ${fmt(p.min)}</span>
+                                    <span class="max">máx ${fmt(p.max)}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="preco-wrap">
-                        <input type="number" min="${p.min}" max="${p.max}" step="0.01"
-                            value="${it.precoUnit.toFixed(2)}"
-                            class="${warnClass}"
-                            data-acao="preco" data-idx="${idx}" aria-label="Preço unitário">
-                    </div>
+
                     <div class="subtotal">${fmt(sub)}</div>
-                    <button class="btn-remover" data-acao="remover" data-idx="${idx}" title="Remover">✕</button>
                 </div>
             `;
         }).join("");
@@ -402,23 +448,58 @@ function render() {
     const t = calcTotais();
     $("subtotal-val").textContent = fmt(t.subtotal);
     $("total-val").textContent = fmt(t.total);
-    $("desconto-input").value = t.descAplicado.toFixed(t.descAplicado % 1 === 0 ? 0 : 2);
+    $("fs-valor").textContent = fmt(t.total);
+
+    const descInput = $("desconto-input");
+    if (document.activeElement !== descInput) {
+        descInput.value = t.descAplicado.toFixed(t.descAplicado % 1 === 0 ? 0 : 2);
+    }
     $("desconto-hint").textContent =
         estado.itens.length > 0 ? `máx permitido: ${t.descMaxPct.toFixed(2)}%` : "";
 
     const aviso = $("aviso-desconto");
     if (t.descClampado) {
-        aviso.textContent = `Desconto reduzido para ${t.descMaxPct.toFixed(2)}% — limite mínimo do contrato com a fazenda.`;
+        aviso.textContent = `Desconto reduzido para ${t.descMaxPct.toFixed(2)}% — limite do contrato com a fazenda.`;
     } else {
         aviso.textContent = "";
     }
+
+    renderRecentes();
+    atualizarFloatingSummary(t);
 }
 
-function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c =>
-        ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+// ============ FLOATING SUMMARY ============
+let floatingObserver = null;
+function inicializarFloatingSummary() {
+    const totaisEl = $("totais-section");
+    const fs = $("floating-summary");
+
+    if (!('IntersectionObserver' in window)) return;
+
+    floatingObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            const visivel = !entry.isIntersecting && estado.itens.length > 0;
+            fs.dataset.visible = visivel ? "true" : "false";
+            fs.hidden = !visivel;
+            fs.setAttribute("aria-hidden", visivel ? "false" : "true");
+        }
+    }, { threshold: 0.05 });
+    floatingObserver.observe(totaisEl);
+
+    $("fs-copiar").addEventListener("click", copiarParaDiscord);
 }
 
+function atualizarFloatingSummary(t) {
+    const fs = $("floating-summary");
+    // Se o pedido está vazio, esconde
+    if (estado.itens.length === 0) {
+        fs.dataset.visible = "false";
+        fs.hidden = true;
+        fs.setAttribute("aria-hidden", "true");
+    }
+}
+
+// ============ DISCORD EXPORT ============
 function gerarTextoDiscord() {
     const t = calcTotais();
     const hoje = new Date();
@@ -429,31 +510,30 @@ function gerarTextoDiscord() {
         return "```\n📜 Pedido vazio — Fazenda Rockefeller\n```";
     }
 
-    // Largura máxima do nome para alinhar
     const maxNome = Math.max(...estado.itens.map(it => it.produtoId.length));
 
     const linhas = estado.itens.map(it => {
         const nome = it.produtoId.padEnd(maxNome, " ");
-        const qtd = String(it.quantidade).padStart(4, " ");
+        const qtd = String(it.quantidade).padStart(5, " ");
         const preco = fmt(it.precoUnit).padStart(7, " ");
-        const sub = fmt(it.precoUnit * it.quantidade).padStart(9, " ");
+        const sub = fmt(it.precoUnit * it.quantidade).padStart(10, " ");
         return `  ${nome}  x ${qtd}  @ ${preco}  = ${sub}`;
     });
 
-    const linha = "═".repeat(Math.max(48, maxNome + 32));
+    const linha = "═".repeat(Math.max(50, maxNome + 34));
 
     let out = "```";
-    out += "\n📜 PEDIDO — FAZENDA ROCKEFELLER";
+    out += "\n📜 PEDIDO — FAMÍLIA ROCKEFELLER";
     out += `\n${data} · ${hora}`;
     out += `\n${linha}`;
     out += `\n${linhas.join("\n")}`;
     out += `\n${linha}`;
-    out += `\n  Subtotal: ${fmt(t.subtotal).padStart(40)}`;
+    out += `\n  Subtotal: ${fmt(t.subtotal).padStart(linha.length - 12)}`;
     if (t.descAplicado > 0) {
         const valorDesc = t.subtotal - t.total;
-        out += `\n  Desconto (${t.descAplicado.toFixed(2)}%): ${("- " + fmt(valorDesc)).padStart(31 - String(t.descAplicado.toFixed(2)).length)}`;
+        out += `\n  Desconto (${t.descAplicado.toFixed(2)}%): ${("- " + fmt(valorDesc)).padStart(linha.length - 16 - t.descAplicado.toFixed(2).length)}`;
     }
-    out += `\n  TOTAL:    ${fmt(t.total).padStart(40)}`;
+    out += `\n  TOTAL:    ${fmt(t.total).padStart(linha.length - 12)}`;
     out += "\n```";
     return out;
 }
@@ -461,11 +541,11 @@ function gerarTextoDiscord() {
 async function copiarParaDiscord() {
     const texto = gerarTextoDiscord();
     const feedback = $("copy-feedback");
+    feedback.innerHTML = "";
     try {
         await navigator.clipboard.writeText(texto);
         feedback.textContent = "✓ Orçamento copiado! Cole no Discord (Ctrl+V).";
     } catch {
-        // Fallback
         const ta = document.createElement("textarea");
         ta.value = texto;
         document.body.appendChild(ta);
@@ -474,19 +554,17 @@ async function copiarParaDiscord() {
             document.execCommand("copy");
             feedback.textContent = "✓ Orçamento copiado! Cole no Discord (Ctrl+V).";
         } catch {
-            feedback.textContent = "Não foi possível copiar automaticamente. Selecione e copie manualmente:";
+            feedback.textContent = "Não foi possível copiar automaticamente. Copie manualmente abaixo:";
             const pre = document.createElement("pre");
             pre.textContent = texto;
-            pre.style.cssText = "background:#f3e3bc;padding:8px;margin-top:8px;text-align:left;white-space:pre;overflow:auto;border:1px solid #4a3522;";
+            pre.style.cssText = "background:#1c1408;padding:12px;margin-top:10px;text-align:left;white-space:pre;overflow:auto;border:1px solid #b8923a;color:#ead7a4;font-family:'Special Elite',monospace;";
             feedback.appendChild(pre);
         }
         document.body.removeChild(ta);
     }
     setTimeout(() => {
-        if (feedback.firstChild && feedback.firstChild.nodeType === Node.TEXT_NODE) {
-            feedback.textContent = "";
-        }
-    }, 4000);
+        if (feedback.children.length === 0) feedback.textContent = "";
+    }, 4500);
 }
 
 function limparPedido() {
@@ -498,27 +576,52 @@ function limparPedido() {
     render();
 }
 
+// ============ INIT ============
 function init() {
     inicializarCombobox();
+    inicializarFloatingSummary();
 
     $("add-btn").addEventListener("click", adicionarItem);
+
+    // Enter na qtd adiciona
     $("qtd-input").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") adicionarItem();
+        if (e.key === "Enter") { e.preventDefault(); adicionarItem(); }
     });
 
-    $("itens-lista").addEventListener("input", (e) => {
+    // Quantidade rápida
+    document.querySelectorAll(".chip-qtd").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const incremento = parseInt(btn.dataset.add, 10);
+            const atual = Math.max(0, Math.floor(parseFloat($("qtd-input").value) || 0));
+            $("qtd-input").value = Math.max(1, atual + incremento);
+            $("qtd-input").focus();
+        });
+    });
+
+    // Recentes (delegação)
+    $("recentes-chips").addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-recente-idx]");
+        if (!btn) return;
+        selecionarProduto(parseInt(btn.dataset.recenteIdx, 10));
+    });
+
+    // Lista de itens (delegação: input number + range + remover)
+    const lista = $("itens-lista");
+    lista.addEventListener("input", (e) => {
         const t = e.target;
         const acao = t.dataset.acao;
         const idx = parseInt(t.dataset.idx, 10);
         if (acao === "qtd") atualizarQtd(idx, t.value);
         else if (acao === "preco") atualizarPreco(idx, t.value);
+        else if (acao === "preco-slider") atualizarPreco(idx, t.value);
     });
-    $("itens-lista").addEventListener("click", (e) => {
+    lista.addEventListener("click", (e) => {
         const t = e.target.closest("[data-acao='remover']");
         if (!t) return;
         removerItem(parseInt(t.dataset.idx, 10));
     });
 
+    // Desconto
     $("desconto-input").addEventListener("input", (e) => {
         const v = parseFloat(e.target.value);
         estado.descontoPercent = isNaN(v) ? 0 : v;
@@ -528,6 +631,17 @@ function init() {
 
     $("copiar-btn").addEventListener("click", copiarParaDiscord);
     $("limpar-btn").addEventListener("click", limparPedido);
+
+    // Atalho global "/" para focar busca
+    document.addEventListener("keydown", (e) => {
+        if (e.key !== "/") return;
+        const ae = document.activeElement;
+        if (ae && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA" || ae.isContentEditable)) return;
+        e.preventDefault();
+        const input = $("produto-busca");
+        input.focus();
+        input.select();
+    });
 
     render();
 }

@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livro de Orçamento da Fazenda Rockefeller</title>
+    <meta name="theme-color" content="#0d0703">
+    <title>Livro de Orçamento — Família Rockefeller</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
         <defs>
             <symbol id="orn-corner" viewBox="0 0 100 100">
@@ -23,8 +26,8 @@
                     <circle cx="40" cy="40" r="3" fill="currentColor"/>
                     <path d="M 18 30 Q 22 26 26 30 Q 22 34 18 30 Z" fill="currentColor"/>
                     <path d="M 30 18 Q 26 22 30 26 Q 34 22 30 18 Z" fill="currentColor"/>
-                    <path d="M 50 14 L 56 18 L 50 22" />
-                    <path d="M 14 50 L 18 56 L 22 50" />
+                    <path d="M 50 14 L 56 18 L 50 22"/>
+                    <path d="M 14 50 L 18 56 L 22 50"/>
                 </g>
             </symbol>
             <symbol id="orn-flourish" viewBox="0 0 200 24">
@@ -37,103 +40,154 @@
                     <path d="M 140 12 L 144 8 M 140 12 L 144 16"/>
                 </g>
             </symbol>
+            <symbol id="orn-divider" viewBox="0 0 300 20">
+                <g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+                    <path d="M 0 10 L 110 10"/>
+                    <path d="M 190 10 L 300 10"/>
+                    <path d="M 110 10 Q 130 2 150 10 Q 170 18 190 10"/>
+                    <circle cx="150" cy="10" r="2" fill="currentColor"/>
+                    <path d="M 130 10 L 128 7 M 130 10 L 128 13"/>
+                    <path d="M 170 10 L 172 7 M 170 10 L 172 13"/>
+                </g>
+            </symbol>
         </defs>
     </svg>
 
-    <div class="frame">
+    <div class="book-frame">
         <svg class="corner corner-tl" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
         <svg class="corner corner-tr" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
         <svg class="corner corner-bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
         <svg class="corner corner-br" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
 
-        <div class="page">
-            <header class="header">
-                <div class="crest">
-                    <svg viewBox="0 0 120 120" aria-hidden="true">
-                        <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.5"/>
-                        <circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="0.8"/>
-                        <path d="M 60 18 L 64 38 L 84 40 L 68 52 L 74 72 L 60 60 L 46 72 L 52 52 L 36 40 L 56 38 Z"
-                              fill="currentColor" opacity="0.85"/>
-                        <text x="60" y="92" text-anchor="middle" font-family="Cinzel, serif" font-size="18" font-weight="900" fill="currentColor">R</text>
-                    </svg>
-                </div>
-                <div class="eyebrow">Família</div>
-                <h1>Rockefeller</h1>
-                <div class="divider">
-                    <span class="line"></span>
-                    <span class="badge">Livro de Orçamento</span>
-                    <span class="line"></span>
-                </div>
-                <p class="motto">— Tradição · Trabalho · Visão · Legado —</p>
-            </header>
+        <header class="book-header">
+            <div class="crest" aria-hidden="true">
+                <svg viewBox="0 0 120 120">
+                    <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="0.8"/>
+                    <path d="M 60 18 L 64 38 L 84 40 L 68 52 L 74 72 L 60 60 L 46 72 L 52 52 L 36 40 L 56 38 Z"
+                          fill="currentColor" opacity="0.85"/>
+                    <text x="60" y="92" text-anchor="middle" font-family="Cinzel, serif" font-size="18" font-weight="900" fill="currentColor">R</text>
+                </svg>
+            </div>
+            <p class="eyebrow">Família</p>
+            <h1>Rockefeller</h1>
+            <div class="divider" aria-hidden="true">
+                <span class="line"></span>
+                <span class="badge">Livro de Orçamento</span>
+                <span class="line"></span>
+            </div>
+            <p class="motto">— Tradição · Trabalho · Visão · Legado —</p>
+        </header>
 
-            <section class="add-section">
-                <h3>Acrescentar ao Pedido</h3>
-                <div class="add-row">
-                    <div class="field grow combobox" id="combobox">
-                        <span>Produto</span>
-                        <input type="text" id="produto-busca" autocomplete="off" spellcheck="false"
-                               placeholder="Digite para buscar (ex: açúcar, saco, leite...)"
-                               aria-label="Buscar produto" aria-autocomplete="list"
-                               aria-controls="produto-lista" aria-expanded="false">
-                        <button type="button" id="combobox-toggle" class="combobox-toggle" aria-label="Abrir lista">▾</button>
-                        <ul id="produto-lista" class="combobox-list" role="listbox" hidden></ul>
+        <main class="book-spread" id="main">
+            <div class="page page-left">
+                <section class="recentes-section" id="recentes-wrap" hidden aria-labelledby="recentes-title">
+                    <h3 id="recentes-title">★ Recentes</h3>
+                    <div class="recentes-chips" id="recentes-chips" role="list"></div>
+                </section>
+
+                <section class="add-section" aria-labelledby="add-title">
+                    <h3 id="add-title">Acrescentar ao Pedido</h3>
+
+                    <div class="field combobox" id="combobox">
+                        <label for="produto-busca">Produto</label>
+                        <div class="combobox-input-wrap">
+                            <input type="text" id="produto-busca" autocomplete="off" spellcheck="false"
+                                   placeholder="Digite para buscar (ex: açúcar, saco, leite...)"
+                                   aria-autocomplete="list" aria-controls="produto-lista"
+                                   aria-expanded="false" role="combobox">
+                            <button type="button" id="combobox-toggle" class="combobox-toggle" aria-label="Abrir lista de produtos" tabindex="-1">▾</button>
+                        </div>
+                        <ul id="produto-lista" class="combobox-list" role="listbox" aria-label="Sugestões de produtos" hidden></ul>
                     </div>
-                    <label class="field qty">
-                        <span>Quantidade</span>
-                        <input type="number" id="qtd-input" min="1" step="1" value="1">
-                    </label>
-                    <button id="add-btn" class="btn btn-primary">+ Adicionar</button>
-                </div>
-                <div class="hint" id="produto-hint"></div>
-            </section>
 
-            <section class="pedido-section">
-                <h3>Itens do Pedido</h3>
-                <div id="itens-lista" class="itens-lista">
-                    <div class="vazio">Nenhum item no pedido ainda, forasteiro.</div>
-                </div>
-            </section>
+                    <div class="qtd-bloco">
+                        <label class="field" for="qtd-input">
+                            <span>Quantidade</span>
+                            <input type="number" id="qtd-input" min="1" step="1" value="1" inputmode="numeric">
+                        </label>
+                        <div class="qtd-rapida" role="group" aria-label="Quantidade rápida">
+                            <button type="button" class="chip-qtd" data-add="1">+1</button>
+                            <button type="button" class="chip-qtd" data-add="10">+10</button>
+                            <button type="button" class="chip-qtd" data-add="50">+50</button>
+                            <button type="button" class="chip-qtd" data-add="100">+100</button>
+                            <button type="button" class="chip-qtd" data-add="500">+500</button>
+                            <button type="button" class="chip-qtd" data-add="1000">+1000</button>
+                        </div>
+                    </div>
 
-            <section class="totais-section">
-                <div class="linha-total">
-                    <span class="label">Subtotal:</span>
-                    <span class="valor" id="subtotal-val">$0.00</span>
-                </div>
-                <div class="linha-total">
-                    <label class="field desconto-field">
-                        <span class="label">Desconto:</span>
-                        <input type="number" id="desconto-input" min="0" max="100" step="0.1" value="0">
-                        <span class="percent">%</span>
-                    </label>
-                    <span class="desconto-hint" id="desconto-hint"></span>
-                </div>
-                <div class="linha-total total-final">
-                    <span class="label">TOTAL:</span>
-                    <span class="valor" id="total-val">$0.00</span>
-                </div>
-                <div class="aviso" id="aviso-desconto"></div>
-            </section>
+                    <button id="add-btn" class="btn btn-primary btn-block">＋ Adicionar ao Pedido</button>
+                    <div class="hint" id="produto-hint" aria-live="polite"></div>
 
-            <section class="acoes-section">
-                <button id="copiar-btn" class="btn btn-primary">📋 Copiar para Discord</button>
-                <button id="limpar-btn" class="btn btn-secondary">🗑 Limpar Pedido</button>
-                <div class="copy-feedback" id="copy-feedback"></div>
-            </section>
+                    <p class="atalhos-hint">
+                        ⌨ Tecle <kbd>/</kbd> para buscar &nbsp;·&nbsp;
+                        <kbd>↵</kbd> seleciona &nbsp;·&nbsp;
+                        <kbd>Esc</kbd> fecha
+                    </p>
+                </section>
+            </div>
 
-            <footer class="footer">
-                <svg class="flourish" viewBox="0 0 200 24" aria-hidden="true"><use href="#orn-flourish"/></svg>
-                <p class="virtudes">
-                    <span>Disciplina em nossas ações</span>
-                    <span class="dot">✦</span>
-                    <span>Lealdade em nossas alianças</span>
-                    <span class="dot">✦</span>
-                    <span>Excelência em nossos resultados</span>
-                </p>
-                <p class="assinatura">Família Rockefeller — Unidos por valores, guiados por um legado.</p>
-            </footer>
-        </div>
+            <div class="spine" aria-hidden="true"></div>
+
+            <div class="page page-right">
+                <section class="pedido-section" aria-labelledby="pedido-title">
+                    <h3 id="pedido-title">Itens do Pedido</h3>
+                    <div id="itens-lista" class="itens-lista" aria-live="polite">
+                        <div class="vazio">Nenhum item no pedido ainda, forasteiro.</div>
+                    </div>
+                </section>
+
+                <section class="totais-section" id="totais-section" aria-labelledby="totais-title">
+                    <h3 id="totais-title" class="visually-hidden">Totais</h3>
+                    <div class="linha-total">
+                        <span class="label">Subtotal:</span>
+                        <span class="valor" id="subtotal-val">$0.00</span>
+                    </div>
+                    <div class="linha-total linha-desconto">
+                        <label class="field desconto-field" for="desconto-input">
+                            <span class="label">Desconto:</span>
+                            <div class="desconto-input-wrap">
+                                <input type="number" id="desconto-input" min="0" max="100" step="0.1" value="0" inputmode="decimal" aria-describedby="desconto-hint">
+                                <span class="percent">%</span>
+                            </div>
+                        </label>
+                        <span class="desconto-hint" id="desconto-hint"></span>
+                    </div>
+                    <div class="linha-total total-final">
+                        <span class="label">TOTAL:</span>
+                        <span class="valor" id="total-val" aria-live="polite">$0.00</span>
+                    </div>
+                    <div class="aviso" id="aviso-desconto" aria-live="polite"></div>
+                </section>
+
+                <section class="acoes-section" aria-label="Ações do pedido">
+                    <button id="copiar-btn" class="btn btn-primary">📋 Copiar para Discord</button>
+                    <button id="limpar-btn" class="btn btn-secondary">🗑 Limpar Pedido</button>
+                    <div class="copy-feedback" id="copy-feedback" aria-live="assertive"></div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="book-footer">
+            <svg class="flourish" viewBox="0 0 200 24" aria-hidden="true"><use href="#orn-flourish"/></svg>
+            <p class="virtudes">
+                <span>Disciplina em nossas ações</span>
+                <span class="dot">✦</span>
+                <span>Lealdade em nossas alianças</span>
+                <span class="dot">✦</span>
+                <span>Excelência em nossos resultados</span>
+            </p>
+            <p class="assinatura">Família Rockefeller — Unidos por valores, guiados por um legado.</p>
+        </footer>
     </div>
+
+    <!-- Total flutuante (aparece ao rolar) -->
+    <div class="floating-summary" id="floating-summary" hidden aria-hidden="true">
+        <span class="fs-label">Total</span>
+        <span class="fs-valor" id="fs-valor">$0.00</span>
+        <button type="button" class="btn btn-primary btn-sm" id="fs-copiar">📋 Copiar</button>
+    </div>
+
     <script src="app.js"></script>
 </body>
 </html>
