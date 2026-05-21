@@ -58,9 +58,9 @@ html, body {
         radial-gradient(ellipse at 50% 20%, #2a1c0a 0%, #150d04 45%, #0a0603 100%),
         repeating-linear-gradient(45deg, transparent 0 3px, rgba(0,0,0,0.05) 3px 6px);
     background-attachment: fixed;
-    padding: 24px 14px;
-    font-size: 17px;
-    line-height: 1.45;
+    padding: 16px 10px;
+    font-size: 15px;
+    line-height: 1.4;
 }
 
 ::selection {
@@ -100,7 +100,7 @@ html, body {
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 16px;
+    padding: 10px;
     background:
         linear-gradient(135deg, #8b6f23 0%, #3d2e0e 30%, #a8862e 50%, #3d2e0e 70%, #8b6f23 100%);
     border-radius: 4px;
@@ -112,42 +112,42 @@ html, body {
 
 .corner {
     position: absolute;
-    width: 64px;
-    height: 64px;
+    width: 42px;
+    height: 42px;
     color: var(--ouro-prof);
     z-index: 5;
     pointer-events: none;
 }
-.corner-tl { top: 6px; left: 6px; }
-.corner-tr { top: 6px; right: 6px; transform: scaleX(-1); }
-.corner-bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
-.corner-br { bottom: 6px; right: 6px; transform: scale(-1, -1); }
+.corner-tl { top: 4px; left: 4px; }
+.corner-tr { top: 4px; right: 4px; transform: scaleX(-1); }
+.corner-bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
+.corner-br { bottom: 4px; right: 4px; transform: scale(-1, -1); }
 
 /* ============ HEADER (topo do livro) — logo compacto ============ */
 .book-header {
     background: var(--page);
     background-image:
         radial-gradient(ellipse at 50% 0%, rgba(184,146,58,0.12) 0%, transparent 70%);
-    padding: 20px 28px 18px;
+    padding: 12px 22px 10px;
     text-align: center;
     border-radius: 1px 1px 0 0;
     box-shadow:
         inset 0 0 0 1px var(--ouro),
         inset 0 0 0 5px var(--page),
         inset 0 0 0 6px var(--ouro-medio),
-        inset 0 0 40px rgba(0,0,0,0.45);
+        inset 0 0 30px rgba(0,0,0,0.45);
     border-bottom: 1px solid var(--ouro-medio);
 }
 
 .brand {
     display: inline-flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
 }
 
 .crest {
-    width: 38px;
-    height: 38px;
+    width: 28px;
+    height: 28px;
     color: var(--ouro-vivo);
     flex: 0 0 auto;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
@@ -157,9 +157,9 @@ html, body {
 .book-header h1 {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: clamp(22px, 3.4vw, 32px);
+    font-size: clamp(18px, 2.4vw, 24px);
     line-height: 1;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
     background: linear-gradient(180deg, #f4d57c 0%, #d4ab4d 50%, #8b6f23 100%);
     -webkit-background-clip: text;
@@ -174,9 +174,9 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin: 10px auto 0;
-    max-width: 480px;
+    gap: 10px;
+    margin: 6px auto 0;
+    max-width: 420px;
 }
 
 .divider .line {
@@ -188,12 +188,12 @@ html, body {
 .divider .badge {
     font-family: 'Cinzel', serif;
     font-weight: 600;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--ouro-claro);
     background: transparent;
-    padding: 2px 10px;
+    padding: 1px 8px;
     border: none;
     box-shadow: none;
     white-space: nowrap;
@@ -209,7 +209,7 @@ html, body {
 
 @media (min-width: 980px) {
     .book-spread {
-        grid-template-columns: 1fr 32px 1fr;
+        grid-template-columns: 1fr 22px 1fr;
     }
 }
 
@@ -220,7 +220,7 @@ html, body {
         radial-gradient(ellipse at 50% 100%, rgba(184,146,58,0.08) 0%, transparent 50%),
         radial-gradient(circle at 20% 40%, rgba(94,71,22,0.10) 0%, transparent 35%),
         radial-gradient(circle at 80% 60%, rgba(94,71,22,0.08) 0%, transparent 35%);
-    padding: 38px 36px 40px;
+    padding: 22px 24px 26px;
     box-shadow:
         inset 0 0 60px rgba(0,0,0,0.55);
     position: relative;
@@ -266,8 +266,8 @@ html, body {
 
 /* ============ SEÇÕES ============ */
 section {
-    margin-bottom: 28px;
-    padding-bottom: 22px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
     position: relative;
 }
 
@@ -281,17 +281,17 @@ section + section::before {
     display: block;
     height: 1px;
     background: linear-gradient(90deg, transparent, var(--ouro-medio) 25%, var(--ouro) 50%, var(--ouro-medio) 75%, transparent);
-    margin-bottom: 26px;
+    margin-bottom: 14px;
     opacity: 0.55;
 }
 
 h3 {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 20px;
+    font-size: 14px;
     color: var(--ouro-vivo);
-    margin-bottom: 18px;
-    letter-spacing: 4px;
+    margin-bottom: 10px;
+    letter-spacing: 3px;
     text-align: center;
     text-transform: uppercase;
     text-shadow: 0 1px 2px rgba(0,0,0,0.6);
@@ -300,8 +300,8 @@ h3 {
 h3::before, h3::after {
     content: " ✦ ";
     color: var(--ouro);
-    font-size: 13px;
-    margin: 0 10px;
+    font-size: 11px;
+    margin: 0 8px;
     opacity: 0.85;
 }
 
@@ -320,18 +320,18 @@ h3::before, h3::after {
 label[for] {
     font-family: 'Cinzel', serif;
     font-weight: 500;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--ouro-vivo);
     text-transform: uppercase;
-    letter-spacing: 3px;
-    margin-bottom: 5px;
+    letter-spacing: 2.5px;
+    margin-bottom: 4px;
 }
 
 select, input[type="number"], input[type="text"] {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 600;
-    padding: 11px 14px;
+    padding: 7px 10px;
     border: 1.5px solid var(--ouro-medio);
     background: var(--bg-mid);
     color: var(--tinta);
@@ -358,19 +358,19 @@ select:focus, input:focus {
 }
 
 .hint {
-    margin-top: 12px;
+    margin-top: 8px;
     font-style: italic;
     color: var(--tinta-fade);
-    font-size: 15px;
-    min-height: 22px;
+    font-size: 13px;
+    min-height: 18px;
     text-align: center;
     font-family: 'Cormorant Garamond', serif;
 }
 
 .atalhos-hint {
-    margin-top: 14px;
+    margin-top: 10px;
     text-align: center;
-    font-size: 12px;
+    font-size: 10px;
     color: var(--tinta-mute);
     font-family: 'Cinzel', serif;
     letter-spacing: 1px;
@@ -380,10 +380,10 @@ kbd {
     font-family: 'Special Elite', monospace;
     background: var(--ouro-prof);
     color: var(--ouro-claro);
-    padding: 2px 7px;
+    padding: 1px 6px;
     border-radius: 2px;
     border: 1px solid var(--ouro-medio);
-    font-size: 12px;
+    font-size: 11px;
     box-shadow: 0 1px 0 rgba(0,0,0,0.4);
 }
 
@@ -400,15 +400,15 @@ kbd {
 
 .combobox-toggle {
     position: absolute;
-    right: 6px;
+    right: 4px;
     top: 50%;
     transform: translateY(-50%);
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     background: transparent;
     border: none;
     color: var(--ouro-vivo);
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     border-radius: 1px;
     transition: background 0.15s, color 0.15s, transform 0.2s;
@@ -452,11 +452,11 @@ kbd {
 .combo-cat {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--ouro);
     text-transform: uppercase;
-    letter-spacing: 3px;
-    padding: 10px 14px 4px;
+    letter-spacing: 2.5px;
+    padding: 6px 12px 2px;
     border-top: 1px solid rgba(184,146,58,0.25);
     background: rgba(0,0,0,0.25);
 }
@@ -467,8 +467,8 @@ kbd {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 12px;
-    padding: 9px 16px;
+    gap: 10px;
+    padding: 6px 12px;
     cursor: pointer;
     transition: background 0.1s;
     border-left: 3px solid transparent;
@@ -486,14 +486,14 @@ kbd {
 .combo-nome {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
-    font-size: 17px;
+    font-size: 14px;
     color: var(--tinta);
 }
 
 .combo-preco {
     font-family: 'Cinzel', serif;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--ouro-vivo);
     letter-spacing: 0.5px;
     white-space: nowrap;
@@ -509,29 +509,29 @@ kbd {
 
 /* ============ QUANTIDADE + QTD RÁPIDA ============ */
 .qtd-bloco {
-    margin-top: 16px;
+    margin-top: 10px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 
 .qtd-rapida {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 4px;
 }
 
 .chip-qtd {
     flex: 1 0 auto;
-    min-width: 64px;
+    min-width: 52px;
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 12px;
-    letter-spacing: 1.5px;
+    font-size: 11px;
+    letter-spacing: 1px;
     color: var(--ouro-vivo);
     background: linear-gradient(180deg, rgba(184,146,58,0.18), rgba(0,0,0,0.4));
     border: 1px solid var(--ouro-medio);
-    padding: 8px 10px;
+    padding: 5px 8px;
     cursor: pointer;
     border-radius: 1px;
     transition: all 0.12s;
@@ -553,9 +553,9 @@ kbd {
 .btn {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 3px;
-    padding: 13px 28px;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    padding: 8px 18px;
     border-radius: 1px;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -566,13 +566,13 @@ kbd {
 
 .btn-block {
     width: 100%;
-    margin-top: 16px;
+    margin-top: 10px;
 }
 
 .btn-sm {
-    font-size: 11px;
-    padding: 8px 14px;
-    letter-spacing: 2px;
+    font-size: 10px;
+    padding: 5px 10px;
+    letter-spacing: 1.5px;
 }
 
 .btn-primary {
@@ -626,22 +626,22 @@ kbd {
 .chip-recente {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--tinta);
     background: linear-gradient(180deg, rgba(184,146,58,0.18), rgba(0,0,0,0.35));
     border: 1px solid var(--ouro-medio);
-    padding: 6px 12px;
+    padding: 3px 10px;
     cursor: pointer;
     border-radius: 999px;
     transition: all 0.12s;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .chip-recente .star {
     color: var(--ouro-vivo);
-    font-size: 11px;
+    font-size: 10px;
 }
 
 .chip-recente:hover {
@@ -651,19 +651,19 @@ kbd {
     transform: translateY(-1px);
 }
 
-/* ============ LISTA DE ITENS DO PEDIDO ============ */
+/* ============ LISTA DE ITENS DO PEDIDO (linha única, compacto) ============ */
 .itens-lista {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 6px;
 }
 
 .vazio {
     text-align: center;
     font-style: italic;
-    font-size: 17px;
+    font-size: 14px;
     color: var(--tinta-fade);
-    padding: 32px 16px;
+    padding: 18px 12px;
     border: 1.5px dashed var(--ouro-medio);
     border-radius: 1px;
     background: rgba(0,0,0,0.2);
@@ -674,41 +674,28 @@ kbd {
     background:
         linear-gradient(180deg, rgba(184,146,58,0.10), rgba(0,0,0,0.25));
     border: 1px solid var(--ouro-medio);
-    border-left: 4px solid var(--ouro);
+    border-left: 3px solid var(--ouro);
     border-radius: 1px;
-    padding: 14px 16px;
-    box-shadow:
-        inset 0 1px 0 rgba(184,146,58,0.12),
-        0 2px 4px rgba(0,0,0,0.3);
+    padding: 6px 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25);
     display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-        "nome remover"
-        "controles controles"
-        "subtotal subtotal";
-    gap: 10px;
-    align-items: start;
+    grid-template-columns: minmax(110px, 1.4fr) 56px 60px minmax(120px, 1.8fr) 80px 26px;
+    grid-template-areas: "nome qtd preco slider subtotal remover";
+    column-gap: 10px;
+    align-items: center;
 }
 
 .item-row .nome {
     grid-area: nome;
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 17px;
-    color: var(--ouro-claro);
-    letter-spacing: 0.5px;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.5);
-}
-
-.item-row .nome small {
-    display: block;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 400;
-    font-style: italic;
     font-size: 13px;
-    color: var(--tinta-fade);
-    letter-spacing: 0;
-    margin-top: 2px;
+    color: var(--ouro-claro);
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .btn-remover {
@@ -716,60 +703,41 @@ kbd {
     background: transparent;
     border: 1.5px solid var(--vermelho-selo);
     color: var(--vermelho-selo);
-    width: 34px;
-    height: 34px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 12px;
     font-weight: bold;
     line-height: 1;
     transition: all 0.15s;
+    padding: 0;
 }
 
 .btn-remover:hover {
     background: var(--vermelho-selo);
     color: var(--tinta);
-    box-shadow: 0 0 0 3px rgba(196,69,47,0.25);
+    box-shadow: 0 0 0 2px rgba(196,69,47,0.25);
 }
 
-.item-controles {
-    grid-area: controles;
-    display: grid;
-    grid-template-columns: 110px 1fr;
-    grid-template-rows: auto auto;
-    grid-template-areas:
-        "qtd preco"
-        "qtd slider";
-    column-gap: 16px;
-    row-gap: 6px;
-    align-items: start;
+.item-row .col-qtd     { grid-area: qtd; }
+.item-row .col-preco   { grid-area: preco; }
+.item-row .col-slider  { grid-area: slider; min-width: 0; }
+.item-row .subtotal    { grid-area: subtotal; }
+
+.item-row input[type="number"] {
+    padding: 4px 6px;
+    font-size: 13px;
+    text-align: right;
 }
 
-.item-controles .col-qtd { grid-area: qtd; }
-.item-controles .col-preco { grid-area: preco; }
-.item-controles .col-slider { grid-area: slider; min-width: 0; }
-
-.item-controles .col-qtd label,
-.item-controles .col-preco label {
-    font-family: 'Cinzel', serif;
-    font-size: 10px;
-    color: var(--ouro-vivo);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    display: block;
-    margin-bottom: 4px;
-}
-
-.item-controles input[type="number"] {
-    padding: 7px 10px;
-    font-size: 15px;
-}
+.item-row .col-qtd input { text-align: center; }
 
 .col-slider {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding-top: 2px;
+    gap: 6px;
+    min-width: 0;
 }
 
 .col-slider input[type="range"] {
@@ -779,8 +747,8 @@ kbd {
 
 .preco-meta-min, .preco-meta-max {
     font-family: 'Cinzel', serif;
-    font-size: 10px;
-    letter-spacing: 1px;
+    font-size: 9px;
+    letter-spacing: 0.5px;
     white-space: nowrap;
 }
 .preco-meta-min { color: var(--tinta-mute); }
@@ -791,7 +759,7 @@ input[type="range"].preco-slider {
     appearance: none;
     -webkit-appearance: none;
     width: 100%;
-    height: 22px;
+    height: 18px;
     background: transparent;
     cursor: pointer;
     padding: 0;
@@ -801,7 +769,7 @@ input[type="range"].preco-slider {
 }
 
 input[type="range"].preco-slider::-webkit-slider-runnable-track {
-    height: 6px;
+    height: 4px;
     background: linear-gradient(90deg, var(--ouro-prof), var(--ouro-medio), var(--ouro-vivo));
     border-radius: 3px;
     border: 1px solid var(--ouro-prof);
@@ -809,7 +777,7 @@ input[type="range"].preco-slider::-webkit-slider-runnable-track {
 }
 
 input[type="range"].preco-slider::-moz-range-track {
-    height: 6px;
+    height: 4px;
     background: linear-gradient(90deg, var(--ouro-prof), var(--ouro-medio), var(--ouro-vivo));
     border-radius: 3px;
     border: 1px solid var(--ouro-prof);
@@ -818,19 +786,19 @@ input[type="range"].preco-slider::-moz-range-track {
 input[type="range"].preco-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     background: radial-gradient(circle at 30% 30%, var(--ouro-claro), var(--ouro-escuro));
     border: 1.5px solid var(--ouro-prof);
     border-radius: 50%;
-    margin-top: -7px;
+    margin-top: -6px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,235,180,0.4);
     cursor: grab;
 }
 
 input[type="range"].preco-slider::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
+    width: 14px;
+    height: 14px;
     background: radial-gradient(circle at 30% 30%, var(--ouro-claro), var(--ouro-escuro));
     border: 1.5px solid var(--ouro-prof);
     border-radius: 50%;
@@ -843,16 +811,13 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 }
 
 .item-row .subtotal {
-    grid-area: subtotal;
     text-align: right;
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 19px;
+    font-size: 14px;
     color: var(--ouro-claro);
-    border-top: 1px solid rgba(184,146,58,0.25);
-    padding-top: 8px;
-    margin-top: 2px;
     text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+    white-space: nowrap;
 }
 
 .preco-warning {
@@ -860,42 +825,57 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     background: rgba(224,144,83,0.12) !important;
 }
 
+/* Item compacto em mobile/tablet: empilha em duas linhas */
+@media (max-width: 760px) {
+    .item-row {
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas:
+            "nome subtotal remover"
+            "qtd preco preco"
+            "slider slider slider";
+        row-gap: 6px;
+    }
+    .item-row .col-slider {
+        padding-top: 2px;
+    }
+}
+
 /* ============ TOTAIS ============ */
 .totais-section {
     background:
         linear-gradient(180deg, rgba(184,146,58,0.14), rgba(0,0,0,0.3));
-    padding: 24px 26px;
+    padding: 14px 16px;
     border-radius: 1px;
     border: 1.5px solid var(--ouro);
     box-shadow:
         inset 0 1px 0 rgba(184,146,58,0.2),
-        inset 0 0 0 4px var(--page),
-        inset 0 0 0 5px var(--ouro-medio),
-        0 3px 8px rgba(0,0,0,0.4);
+        inset 0 0 0 3px var(--page),
+        inset 0 0 0 4px var(--ouro-medio),
+        0 2px 6px rgba(0,0,0,0.4);
 }
 
 .linha-total {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
+    padding: 4px 0;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 .linha-total .label {
     font-family: 'Cinzel', serif;
     font-weight: 500;
-    font-size: 13px;
+    font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px;
     color: var(--tinta);
 }
 
 .linha-total .valor {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 22px;
+    font-size: 16px;
     color: var(--ouro-claro);
 }
 
@@ -906,46 +886,47 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 .desconto-field {
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .desconto-input-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
 }
 
 .desconto-field input {
-    width: 100px;
-    padding: 7px 10px;
+    width: 80px;
+    padding: 4px 8px;
+    font-size: 13px;
 }
 
 .desconto-field .percent {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 17px;
+    font-size: 13px;
     color: var(--ouro-vivo);
 }
 
 .desconto-hint {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: 14px;
+    font-size: 12px;
     color: var(--tinta-fade);
 }
 
 .total-final {
     border-top: 2px solid var(--ouro);
-    padding-top: 14px;
-    margin-top: 8px;
+    padding-top: 8px;
+    margin-top: 6px;
     position: relative;
 }
 
 .total-final::after {
     content: "";
     position: absolute;
-    top: 3px; left: 0; right: 0;
+    top: 2px; left: 0; right: 0;
     height: 1px;
     background: var(--ouro);
     opacity: 0.5;
@@ -954,15 +935,15 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 .total-final .label {
     font-family: 'Cinzel', serif;
     font-weight: 900;
-    font-size: 18px;
+    font-size: 13px;
     color: var(--ouro-vivo);
-    letter-spacing: 5px;
+    letter-spacing: 3.5px;
 }
 
 .total-final .valor {
     font-family: 'Cinzel', serif;
     font-weight: 900;
-    font-size: 32px;
+    font-size: 22px;
     background: linear-gradient(180deg, #f4d57c, var(--ouro-vivo) 45%, var(--ouro-escuro));
     -webkit-background-clip: text;
     background-clip: text;
@@ -972,19 +953,19 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 }
 
 .aviso {
-    margin-top: 12px;
+    margin-top: 8px;
     color: var(--aviso);
     font-style: italic;
-    font-size: 15px;
+    font-size: 13px;
     text-align: center;
-    min-height: 22px;
+    min-height: 18px;
     font-family: 'Cormorant Garamond', serif;
 }
 
 /* ============ AÇÕES ============ */
 .acoes-section {
     display: flex;
-    gap: 14px;
+    gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -994,10 +975,10 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     text-align: center;
     color: var(--ouro-claro);
     font-style: italic;
-    min-height: 22px;
-    margin-top: 6px;
+    min-height: 18px;
+    margin-top: 4px;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 /* ============ FOOTER ============ */
@@ -1006,7 +987,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     background-image:
         radial-gradient(ellipse at 50% 100%, rgba(184,146,58,0.10) 0%, transparent 60%);
     text-align: center;
-    padding: 28px 24px 32px;
+    padding: 14px 20px 16px;
     border-top: 1px solid var(--ouro-medio);
     box-shadow:
         inset 0 0 0 1px var(--ouro),
@@ -1015,24 +996,24 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 }
 
 .book-footer .flourish {
-    width: 240px;
-    height: 24px;
+    width: 180px;
+    height: 18px;
     color: var(--ouro);
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 .virtudes {
     font-family: 'Cinzel', serif;
     font-weight: 500;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--ouro-vivo);
     text-transform: uppercase;
-    letter-spacing: 3px;
+    letter-spacing: 2.5px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 6px;
 }
 
 .virtudes .dot { color: var(--ouro); }
@@ -1041,30 +1022,30 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
     color: var(--tinta-fade);
-    font-size: 14px;
-    letter-spacing: 1px;
+    font-size: 12px;
+    letter-spacing: 0.8px;
 }
 
 /* ============ TOTAL FLUTUANTE ============ */
 .floating-summary {
     position: fixed;
-    bottom: 16px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%) translateY(120%);
     background: linear-gradient(180deg, var(--page-2), var(--bg-mid));
     border: 1.5px solid var(--ouro);
     border-radius: 4px;
-    padding: 12px 18px;
+    padding: 8px 14px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 10px;
     box-shadow:
-        0 8px 30px rgba(0,0,0,0.7),
+        0 8px 24px rgba(0,0,0,0.7),
         inset 0 1px 0 rgba(184,146,58,0.3);
     z-index: 50;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0;
-    max-width: calc(100vw - 32px);
+    max-width: calc(100vw - 24px);
 }
 
 .floating-summary[data-visible="true"] {
@@ -1074,16 +1055,16 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 
 .floating-summary .fs-label {
     font-family: 'Cinzel', serif;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--tinta-soft);
     text-transform: uppercase;
-    letter-spacing: 2.5px;
+    letter-spacing: 2px;
 }
 
 .floating-summary .fs-valor {
     font-family: 'Cinzel', serif;
     font-weight: 900;
-    font-size: 22px;
+    font-size: 17px;
     color: var(--ouro-claro);
     text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }

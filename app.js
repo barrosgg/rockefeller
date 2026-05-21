@@ -409,35 +409,31 @@ function render() {
             const sub = it.precoUnit * it.quantidade;
             const warnClass = it._aviso ? "preco-warning" : "";
             return `
-                <div class="item-row" role="group" aria-label="${escapeHtml(p.nome)}">
+                <div class="item-row" role="group" aria-label="${escapeHtml(p.nome)}" title="${escapeHtml(p.nome)} — min ${fmt(p.min)} · máx ${fmt(p.max)}">
                     <div class="nome">${escapeHtml(p.nome)}</div>
+                    <div class="col-qtd">
+                        <input type="number" id="qtd-${idx}" min="1" step="1" value="${it.quantidade}"
+                            inputmode="numeric" data-acao="qtd" data-idx="${idx}"
+                            aria-label="Quantidade de ${escapeHtml(p.nome)}">
+                    </div>
+                    <div class="col-preco">
+                        <input type="number" id="preco-${idx}" min="${p.min}" max="${p.max}" step="0.01"
+                            value="${it.precoUnit.toFixed(2)}" inputmode="decimal"
+                            class="${warnClass}"
+                            data-acao="preco" data-idx="${idx}"
+                            aria-label="Preço unitário de ${escapeHtml(p.nome)}">
+                    </div>
+                    <div class="col-slider">
+                        <span class="preco-meta-min">${fmt(p.min)}</span>
+                        <input type="range" class="preco-slider" min="${p.min}" max="${p.max}" step="0.01"
+                            value="${it.precoUnit.toFixed(2)}"
+                            aria-label="Ajustar preço de ${escapeHtml(p.nome)}"
+                            data-acao="preco-slider" data-idx="${idx}">
+                        <span class="preco-meta-max">${fmt(p.max)}</span>
+                    </div>
+                    <div class="subtotal">${fmt(sub)}</div>
                     <button class="btn-remover" data-acao="remover" data-idx="${idx}"
                             title="Remover ${escapeHtml(p.nome)}" aria-label="Remover ${escapeHtml(p.nome)}">✕</button>
-
-                    <div class="item-controles">
-                        <div class="col-qtd">
-                            <label for="qtd-${idx}">Qtd</label>
-                            <input type="number" id="qtd-${idx}" min="1" step="1" value="${it.quantidade}"
-                                inputmode="numeric" data-acao="qtd" data-idx="${idx}">
-                        </div>
-                        <div class="col-preco">
-                            <label for="preco-${idx}">Preço unitário</label>
-                            <input type="number" id="preco-${idx}" min="${p.min}" max="${p.max}" step="0.01"
-                                value="${it.precoUnit.toFixed(2)}" inputmode="decimal"
-                                class="${warnClass}"
-                                data-acao="preco" data-idx="${idx}">
-                        </div>
-                        <div class="col-slider">
-                            <span class="preco-meta-min">${fmt(p.min)}</span>
-                            <input type="range" class="preco-slider" min="${p.min}" max="${p.max}" step="0.01"
-                                value="${it.precoUnit.toFixed(2)}"
-                                aria-label="Ajustar preço de ${escapeHtml(p.nome)}"
-                                data-acao="preco-slider" data-idx="${idx}">
-                            <span class="preco-meta-max">${fmt(p.max)}</span>
-                        </div>
-                    </div>
-
-                    <div class="subtotal">${fmt(sub)}</div>
                 </div>
             `;
         }).join("");
