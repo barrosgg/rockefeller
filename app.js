@@ -540,9 +540,9 @@ function renderHistorico() {
 
 // ============ URL SHARE (calculadora gera link pra view-only) ============
 function urlBase() {
-    let base = location.pathname.replace(/index\.html$/, "");
-    if (!base.endsWith("/")) base += "/";
-    return location.origin + base;
+    // Pega o diretório do documento atual, funciona em http(s)://, file://
+    // e qualquer preview server. Strip de query/hash + remove o filename.
+    return location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "");
 }
 
 function gerarUrlPedido() {
@@ -570,23 +570,64 @@ function carregarDeUrl() {
 }
 
 async function copiarLink() {
+    const feedback = $("copy-feedback");
+    feedback.innerHTML = "";
+
     if (estado.itens.length === 0) {
-        const feedback = $("copy-feedback");
         feedback.textContent = "Adicione itens antes de gerar o link.";
         setTimeout(() => { feedback.textContent = ""; }, 3500);
         return;
     }
+
     const url = gerarUrlPedido();
-    const feedback = $("copy-feedback");
-    try {
-        await navigator.clipboard.writeText(url);
-        feedback.textContent = "✓ Link copiado! Cole no Discord — abre numa página de visualização.";
-    } catch {
-        feedback.textContent = `Link: ${url}`;
+    console.log("[link] URL gerada:", url);
+
+    const copiouNoClip = await tentarCopiarClipboard(url);
+    if (copiouNoClip) {
+        feedback.innerHTML = `✓ Link copiado! Cole no Discord — <a href="${escapeHtml(url)}" target="_blank" rel="noopener" style="color:var(--ouro-vivo);text-decoration:underline;">testar agora</a>`;
+    } else {
+        // Mostra link clicável + URL legível pra cópia manual
+        feedback.innerHTML = `
+            Não consegui copiar automaticamente.
+            <a href="${escapeHtml(url)}" target="_blank" rel="noopener" style="color:var(--ouro-vivo);text-decoration:underline;">Abrir o link</a>
+            ou selecione abaixo:
+            <textarea readonly style="width:100%;margin-top:6px;padding:6px;font-family:'Special Elite',monospace;font-size:12px;background:rgba(0,0,0,0.25);color:var(--ouro-claro);border:1px solid var(--ouro-medio);" onclick="this.select()">${escapeHtml(url)}</textarea>
+        `;
     }
+
     setTimeout(() => {
-        if (feedback.children.length === 0) feedback.textContent = "";
-    }, 5000);
+        // Limpa apenas se ainda for o feedback de sucesso (sem children complexos)
+        if (feedback.querySelector("textarea")) return;
+        feedback.innerHTML = "";
+    }, 8000);
+}
+
+async function tentarCopiarClipboard(texto) {
+    // Caminho 1: API moderna (HTTPS / localhost / file:// recente)
+    if (navigator.clipboard && window.isSecureContext !== false) {
+        try {
+            await navigator.clipboard.writeText(texto);
+            return true;
+        } catch (err) {
+            console.warn("[clipboard] navigator.clipboard falhou:", err);
+        }
+    }
+    // Caminho 2: fallback execCommand via textarea oculto
+    try {
+        const ta = document.createElement("textarea");
+        ta.value = texto;
+        ta.setAttribute("readonly", "");
+        ta.style.cssText = "position:absolute;left:-9999px;top:0;opacity:0;";
+        document.body.appendChild(ta);
+        ta.select();
+        ta.setSelectionRange(0, ta.value.length);
+        const ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return ok;
+    } catch (err) {
+        console.warn("[clipboard] execCommand falhou:", err);
+        return false;
+    }
 }
 
 // ============ INIT ============

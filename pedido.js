@@ -125,9 +125,8 @@ function renderNota(state) {
 }
 
 function montarLinkEditor(hash) {
-    let base = location.pathname.replace(/pedido\.html$/, "");
-    if (!base.endsWith("/")) base += "/";
-    return `${location.origin}${base}index.html${hash}`;
+    const base = location.href.split("#")[0].split("?")[0].replace(/[^/]*$/, "");
+    return `${base}index.html${hash}`;
 }
 
 async function copiarTextoDiscord(state) {
