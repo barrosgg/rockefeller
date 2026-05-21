@@ -40,7 +40,11 @@ function calcTotais(state) {
     if (descAplicado < 0) descAplicado = 0;
     const total = subtotal * (1 - descAplicado / 100);
     const margem = total - minTotal;
-    const margemPct = minTotal > 0 ? (margem / minTotal) * 100 : 0;
+    // Margem como % do total = "folga ainda disponível para desconto".
+    // Consistente com descMaxPct (calculado sobre o subtotal): quando
+    // o desconto está em 0, ambos batem; à medida que o desconto sobe,
+    // a folga (margemPct sobre total atual) diminui.
+    const margemPct = total > 0 ? (margem / total) * 100 : 0;
     return { subtotal, minTotal, descMaxPct, descAplicado, descClampado, total, margem, margemPct };
 }
 

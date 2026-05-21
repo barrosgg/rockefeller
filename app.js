@@ -372,11 +372,15 @@ function render() {
         catInfo.innerHTML = "";
     }
 
-    // Margem do contrato (lucro acima do mínimo)
+    // Margem do contrato: quanto sobra acima do mínimo + quanto de
+    // desconto ainda cabe sem violar o piso.
     const margemInfo = $("margem-info");
     if (estado.itens.length > 0 && t.minTotal > 0) {
-        const sinal = t.margem >= 0 ? "+" : "";
-        margemInfo.innerHTML = `Margem do contrato: <span class="pct">${sinal}${fmt(t.margem)} (${t.margemPct.toFixed(1)}% acima do mínimo)</span>`;
+        const sinal = t.margem > 0 ? "+" : "";
+        const folga = t.margemPct < 0.05
+            ? "sem folga restante"
+            : `cabem ainda ${t.margemPct.toFixed(1)}% de desconto`;
+        margemInfo.innerHTML = `Margem do contrato: <span class="pct">${sinal}${fmt(t.margem)}</span> · ${folga}`;
     } else {
         margemInfo.innerHTML = "";
     }
