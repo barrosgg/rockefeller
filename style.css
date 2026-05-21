@@ -1,37 +1,38 @@
 /* ===== Livro de Orçamento — Família Rockefeller =====
-   Tema: pergaminho escuro · dourado profundo · couro envelhecido
+   Tema: pergaminho claro + ouro escuro (documento de cartório)
    Layout: livro aberto de duas páginas em telas largas */
 
 :root {
     /* Fundos */
-    --bg-deep: #0a0603;
-    --bg-mid: #1a0f06;
-    --bg-frame: #2a1d0a;
+    --bg-deep: #c4b08a;
+    --bg-mid: #d4c39c;
+    --bg-frame: #8b6f23;
 
-    /* Página (pergaminho escuro) */
-    --page: #1c1408;
-    --page-2: #261a0c;
-    --page-edge: #0f0a04;
+    /* Página (pergaminho creme) */
+    --page: #f5ecd0;
+    --page-2: #faf3dc;
+    --page-edge: #e8d5a8;
+    --page-shadow: #d4c39c;
 
     /* Ouro */
-    --ouro-claro: #e7c060;
-    --ouro-vivo: #d4ab4d;
-    --ouro: #b8923a;
-    --ouro-medio: #8b6f23;
-    --ouro-escuro: #5e4716;
+    --ouro-claro: #d4ab4d;
+    --ouro-vivo: #b8923a;
+    --ouro: #8b6f23;
+    --ouro-medio: #6e5418;
+    --ouro-escuro: #5a4313;
     --ouro-prof: #3d2e0e;
 
-    /* Texto */
-    --tinta: #ead7a4;
-    --tinta-soft: #c7a972;
-    --tinta-fade: #8c724a;
-    --tinta-mute: #6a553a;
+    /* Texto (tinta sobre pergaminho) */
+    --tinta: #2a1f10;
+    --tinta-soft: #4a3520;
+    --tinta-fade: #6e5418;
+    --tinta-mute: #8b7a4a;
 
     /* Estado */
-    --aviso: #e09053;
-    --vermelho-selo: #c4452f;
-    --vermelho-escuro: #7a1f15;
-    --sucesso: #c2a44a;
+    --aviso: #9a4316;
+    --vermelho-selo: #7a1f15;
+    --vermelho-escuro: #5a1410;
+    --sucesso: #5a7d2a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,8 +56,8 @@ html, body {
     color: var(--tinta);
     background: var(--bg-deep);
     background-image:
-        radial-gradient(ellipse at 50% 20%, #2a1c0a 0%, #150d04 45%, #0a0603 100%),
-        repeating-linear-gradient(45deg, transparent 0 3px, rgba(0,0,0,0.05) 3px 6px);
+        radial-gradient(ellipse at 50% 20%, #d4c39c 0%, #c4b08a 50%, #a89868 100%),
+        repeating-linear-gradient(45deg, transparent 0 3px, rgba(94,71,22,0.03) 3px 6px);
     background-attachment: fixed;
     padding: 16px 10px;
     font-size: 15px;
@@ -65,7 +66,7 @@ html, body {
 
 ::selection {
     background: var(--ouro);
-    color: var(--bg-deep);
+    color: var(--page);
 }
 
 /* ====== Skip link a11y ====== */
@@ -75,7 +76,7 @@ html, body {
     left: 8px;
     padding: 10px 16px;
     background: var(--ouro);
-    color: var(--bg-deep);
+    color: var(--page);
     font-family: 'Cinzel', serif;
     font-weight: 700;
     text-decoration: none;
@@ -95,19 +96,19 @@ html, body {
     border: 0;
 }
 
-/* ============ FRAME (capa/moldura externa) ============ */
+/* ============ FRAME (moldura externa dourada) ============ */
 .book-frame {
     position: relative;
     max-width: 1400px;
     margin: 0 auto;
     padding: 10px;
     background:
-        linear-gradient(135deg, #8b6f23 0%, #3d2e0e 30%, #a8862e 50%, #3d2e0e 70%, #8b6f23 100%);
+        linear-gradient(135deg, #c89530 0%, #8b6f23 30%, #d4ab4d 50%, #8b6f23 70%, #c89530 100%);
     border-radius: 4px;
     box-shadow:
-        0 30px 100px rgba(0,0,0,0.85),
-        0 0 0 1px #0a0603,
-        inset 0 0 30px rgba(0,0,0,0.5);
+        0 20px 60px rgba(74,53,32,0.5),
+        0 0 0 1px var(--ouro-prof),
+        inset 0 0 20px rgba(94,71,22,0.3);
 }
 
 .corner {
@@ -123,11 +124,11 @@ html, body {
 .corner-bl { bottom: 4px; left: 4px; transform: scaleY(-1); }
 .corner-br { bottom: 4px; right: 4px; transform: scale(-1, -1); }
 
-/* ============ HEADER (topo do livro) — logo compacto ============ */
+/* ============ HEADER ============ */
 .book-header {
     background: var(--page);
     background-image:
-        radial-gradient(ellipse at 50% 0%, rgba(184,146,58,0.12) 0%, transparent 70%);
+        radial-gradient(ellipse at 50% 0%, rgba(184,146,58,0.18) 0%, transparent 70%);
     padding: 12px 22px 10px;
     text-align: center;
     border-radius: 1px 1px 0 0;
@@ -135,7 +136,7 @@ html, body {
         inset 0 0 0 1px var(--ouro),
         inset 0 0 0 5px var(--page),
         inset 0 0 0 6px var(--ouro-medio),
-        inset 0 0 30px rgba(0,0,0,0.45);
+        inset 0 0 30px rgba(184,146,58,0.15);
     border-bottom: 1px solid var(--ouro-medio);
 }
 
@@ -148,9 +149,9 @@ html, body {
 .crest {
     width: 28px;
     height: 28px;
-    color: var(--ouro-vivo);
+    color: var(--ouro);
     flex: 0 0 auto;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+    filter: drop-shadow(0 1px 2px rgba(94,71,22,0.4));
 }
 .crest svg { width: 100%; height: 100%; display: block; }
 
@@ -161,12 +162,11 @@ html, body {
     line-height: 1;
     letter-spacing: 2.5px;
     text-transform: uppercase;
-    background: linear-gradient(180deg, #f4d57c 0%, #d4ab4d 50%, #8b6f23 100%);
+    background: linear-gradient(180deg, #b8923a 0%, #8b6f23 50%, #5a4313 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: var(--ouro);
-    filter: drop-shadow(0 1px 0 rgba(0,0,0,0.5));
     margin: 0;
 }
 
@@ -191,7 +191,7 @@ html, body {
     letter-spacing: 2.5px;
     text-transform: uppercase;
     font-size: 10px;
-    color: var(--ouro-claro);
+    color: var(--ouro-escuro);
     background: transparent;
     padding: 1px 8px;
     border: none;
@@ -199,7 +199,7 @@ html, body {
     white-space: nowrap;
 }
 
-/* ============ SPREAD (duas páginas) ============ */
+/* ============ SPREAD ============ */
 .book-spread {
     display: grid;
     grid-template-columns: 1fr;
@@ -218,40 +218,40 @@ html, body {
     background-image:
         radial-gradient(ellipse at 50% 0%, rgba(184,146,58,0.10) 0%, transparent 50%),
         radial-gradient(ellipse at 50% 100%, rgba(184,146,58,0.08) 0%, transparent 50%),
-        radial-gradient(circle at 20% 40%, rgba(94,71,22,0.10) 0%, transparent 35%),
-        radial-gradient(circle at 80% 60%, rgba(94,71,22,0.08) 0%, transparent 35%);
+        radial-gradient(circle at 20% 40%, rgba(122,94,31,0.08) 0%, transparent 35%),
+        radial-gradient(circle at 80% 60%, rgba(122,94,31,0.06) 0%, transparent 35%);
     padding: 22px 24px 26px;
     box-shadow:
-        inset 0 0 60px rgba(0,0,0,0.55);
+        inset 0 0 60px rgba(184,146,58,0.12);
     position: relative;
 }
 
 @media (min-width: 980px) {
     .page-left {
         box-shadow:
-            inset -8px 0 18px rgba(0,0,0,0.55),
-            inset 0 0 50px rgba(0,0,0,0.4);
+            inset -8px 0 18px rgba(122,94,31,0.20),
+            inset 0 0 40px rgba(184,146,58,0.15);
         align-self: start;
         position: sticky;
         top: 12px;
     }
     .page-right {
         box-shadow:
-            inset 8px 0 18px rgba(0,0,0,0.55),
-            inset 0 0 50px rgba(0,0,0,0.4);
+            inset 8px 0 18px rgba(122,94,31,0.20),
+            inset 0 0 40px rgba(184,146,58,0.15);
     }
 }
 
-/* Lombada do livro entre as duas páginas */
+/* Lombada do livro */
 .spine {
     background:
         linear-gradient(90deg,
-            #0a0603 0%, #0a0603 8%,
-            #1a0f06 25%, #2a1d0a 50%, #1a0f06 75%,
-            #0a0603 92%, #0a0603 100%);
+            #6e5418 0%, #5a4313 8%,
+            #8b6f23 25%, #b8923a 50%, #8b6f23 75%,
+            #5a4313 92%, #6e5418 100%);
     box-shadow:
-        inset 0 0 12px rgba(0,0,0,0.9),
-        0 0 20px rgba(0,0,0,0.6);
+        inset 0 0 12px rgba(58,42,12,0.7),
+        0 0 20px rgba(94,71,22,0.3);
     display: none;
 }
 @media (min-width: 980px) {
@@ -262,8 +262,8 @@ html, body {
     .page-left {
         border-bottom: 1px solid var(--ouro-medio);
         box-shadow:
-            inset 0 0 50px rgba(0,0,0,0.55),
-            0 4px 16px rgba(0,0,0,0.4);
+            inset 0 0 40px rgba(184,146,58,0.15),
+            0 4px 12px rgba(94,71,22,0.2);
     }
 }
 
@@ -292,12 +292,11 @@ h3 {
     font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 14px;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
     margin-bottom: 10px;
     letter-spacing: 3px;
     text-align: center;
     text-transform: uppercase;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
 
 h3::before, h3::after {
@@ -324,7 +323,7 @@ label[for] {
     font-family: 'Cinzel', serif;
     font-weight: 500;
     font-size: 10px;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
     text-transform: uppercase;
     letter-spacing: 2.5px;
     margin-bottom: 4px;
@@ -336,12 +335,12 @@ select, input[type="number"], input[type="text"] {
     font-weight: 600;
     padding: 7px 10px;
     border: 1.5px solid var(--ouro-medio);
-    background: var(--bg-mid);
+    background: var(--page-2);
     color: var(--tinta);
     border-radius: 1px;
     box-shadow:
-        inset 0 1px 3px rgba(0,0,0,0.5),
-        0 1px 0 rgba(184,146,58,0.1);
+        inset 0 1px 3px rgba(94,71,22,0.15),
+        0 1px 0 rgba(255,255,255,0.4);
     width: 100%;
     transition: border-color 0.15s, box-shadow 0.15s;
 }
@@ -349,15 +348,15 @@ select, input[type="number"], input[type="text"] {
 input::placeholder {
     color: var(--tinta-mute);
     font-style: italic;
-    opacity: 0.85;
+    opacity: 0.7;
 }
 
 select:focus, input:focus {
     outline: none;
     border-color: var(--ouro-vivo);
     box-shadow:
-        inset 0 1px 3px rgba(0,0,0,0.5),
-        0 0 0 2px rgba(212,171,77,0.4);
+        inset 0 1px 3px rgba(94,71,22,0.15),
+        0 0 0 2px rgba(184,146,58,0.35);
 }
 
 .hint {
@@ -381,13 +380,13 @@ select:focus, input:focus {
 
 kbd {
     font-family: 'Special Elite', monospace;
-    background: var(--ouro-prof);
-    color: var(--ouro-claro);
+    background: var(--page-edge);
+    color: var(--ouro-prof);
     padding: 1px 6px;
     border-radius: 2px;
     border: 1px solid var(--ouro-medio);
     font-size: 11px;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.4);
 }
 
 /* ============ CLIENTE ============ */
@@ -397,13 +396,13 @@ kbd {
     gap: 10px;
     margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px dashed rgba(184,146,58,0.3);
+    border-bottom: 1px dashed rgba(122,94,31,0.4);
 }
 
 .cliente-bar label {
     font-family: 'Cinzel', serif;
     font-size: 10px;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
     text-transform: uppercase;
     letter-spacing: 2.5px;
     margin: 0;
@@ -436,7 +435,7 @@ kbd {
     height: 26px;
     background: transparent;
     border: none;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
     font-size: 14px;
     cursor: pointer;
     border-radius: 1px;
@@ -444,8 +443,8 @@ kbd {
 }
 
 .combobox-toggle:hover {
-    background: rgba(184,146,58,0.15);
-    color: var(--ouro-claro);
+    background: rgba(184,146,58,0.18);
+    color: var(--ouro-prof);
 }
 
 .combobox.aberto .combobox-toggle {
@@ -466,15 +465,15 @@ kbd {
     padding: 4px 0;
     z-index: 30;
     box-shadow:
-        0 12px 30px rgba(0,0,0,0.7),
+        0 12px 30px rgba(94,71,22,0.35),
         inset 0 0 0 4px var(--page-2),
         inset 0 0 0 5px rgba(184,146,58,0.25);
 }
 
 .combobox-list::-webkit-scrollbar { width: 10px; }
-.combobox-list::-webkit-scrollbar-track { background: var(--page); }
+.combobox-list::-webkit-scrollbar-track { background: var(--page-edge); }
 .combobox-list::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--ouro-medio), var(--ouro-prof));
+    background: linear-gradient(180deg, var(--ouro), var(--ouro-escuro));
     border-radius: 2px;
 }
 
@@ -482,12 +481,12 @@ kbd {
     font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 9px;
-    color: var(--ouro);
+    color: var(--ouro-prof);
     text-transform: uppercase;
     letter-spacing: 2.5px;
     padding: 6px 12px 2px;
-    border-top: 1px solid rgba(184,146,58,0.25);
-    background: rgba(0,0,0,0.25);
+    border-top: 1px solid rgba(184,146,58,0.4);
+    background: rgba(184,146,58,0.12);
 }
 
 .combo-cat:first-child { border-top: none; }
@@ -504,11 +503,11 @@ kbd {
 }
 
 .combo-item:hover {
-    background: rgba(184,146,58,0.12);
+    background: rgba(184,146,58,0.18);
 }
 
 .combo-item.ativo {
-    background: linear-gradient(90deg, rgba(184,146,58,0.28), rgba(184,146,58,0.08));
+    background: linear-gradient(90deg, rgba(184,146,58,0.30), rgba(184,146,58,0.10));
     border-left-color: var(--ouro-vivo);
 }
 
@@ -523,7 +522,7 @@ kbd {
     font-family: 'Cinzel', serif;
     font-weight: 500;
     font-size: 11px;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
     letter-spacing: 0.5px;
     white-space: nowrap;
 }
@@ -557,8 +556,8 @@ kbd {
     font-weight: 700;
     font-size: 11px;
     letter-spacing: 1px;
-    color: var(--ouro-vivo);
-    background: linear-gradient(180deg, rgba(184,146,58,0.18), rgba(0,0,0,0.4));
+    color: var(--ouro-prof);
+    background: linear-gradient(180deg, rgba(184,146,58,0.18), rgba(184,146,58,0.08));
     border: 1px solid var(--ouro-medio);
     padding: 5px 8px;
     cursor: pointer;
@@ -567,15 +566,15 @@ kbd {
 }
 
 .chip-qtd:hover {
-    background: linear-gradient(180deg, rgba(212,171,77,0.35), rgba(94,71,22,0.5));
-    border-color: var(--ouro-vivo);
-    color: var(--ouro-claro);
+    background: linear-gradient(180deg, var(--ouro-claro), var(--ouro));
+    border-color: var(--ouro-escuro);
+    color: var(--page);
     transform: translateY(-1px);
 }
 
 .chip-qtd:active {
     transform: translateY(1px);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+    box-shadow: inset 0 2px 4px rgba(94,71,22,0.3);
 }
 
 /* ============ BOTÕES ============ */
@@ -605,44 +604,44 @@ kbd {
 }
 
 .btn-primary {
-    background: linear-gradient(180deg, var(--ouro-claro) 0%, var(--ouro) 50%, var(--ouro-escuro) 100%);
-    color: var(--bg-deep);
-    text-shadow: 1px 1px 0 rgba(255,235,180,0.3);
+    background: linear-gradient(180deg, var(--ouro-claro) 0%, var(--ouro-vivo) 50%, var(--ouro-escuro) 100%);
+    color: var(--page);
+    text-shadow: 1px 1px 0 rgba(94,71,22,0.4);
     box-shadow:
         inset 0 1px 0 rgba(255,235,180,0.4),
-        inset 0 -2px 4px rgba(0,0,0,0.25),
-        0 3px 6px rgba(0,0,0,0.5);
+        inset 0 -2px 4px rgba(94,71,22,0.2),
+        0 2px 4px rgba(94,71,22,0.3);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(180deg, #f4d57c 0%, var(--ouro-claro) 50%, var(--ouro) 100%);
+    background: linear-gradient(180deg, #e7c060 0%, var(--ouro-claro) 50%, var(--ouro-vivo) 100%);
     transform: translateY(-1px);
     box-shadow:
         inset 0 1px 0 rgba(255,235,180,0.5),
-        inset 0 -2px 4px rgba(0,0,0,0.25),
-        0 5px 10px rgba(0,0,0,0.55);
+        inset 0 -2px 4px rgba(94,71,22,0.2),
+        0 4px 8px rgba(94,71,22,0.4);
 }
 
 .btn-primary:active {
     transform: translateY(1px);
     box-shadow:
-        inset 0 2px 5px rgba(0,0,0,0.4),
-        0 1px 2px rgba(0,0,0,0.4);
+        inset 0 2px 5px rgba(94,71,22,0.3),
+        0 1px 2px rgba(94,71,22,0.2);
 }
 
 .btn-secondary {
     background: linear-gradient(180deg, var(--page-2), var(--page-edge));
-    color: var(--ouro-vivo);
+    color: var(--ouro-prof);
     border-color: var(--ouro-medio);
     box-shadow:
-        inset 0 1px 0 rgba(184,146,58,0.15),
-        0 2px 4px rgba(0,0,0,0.4);
+        inset 0 1px 0 rgba(255,255,255,0.5),
+        0 2px 3px rgba(94,71,22,0.2);
 }
 
 .btn-secondary:hover {
-    background: linear-gradient(180deg, var(--bg-frame), var(--page));
-    border-color: var(--ouro-vivo);
-    color: var(--ouro-claro);
+    background: linear-gradient(180deg, var(--page), var(--page-2));
+    border-color: var(--ouro);
+    color: var(--ouro-escuro);
 }
 
 /* ============ RECENTES ============ */
@@ -656,8 +655,8 @@ kbd {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 600;
     font-size: 13px;
-    color: var(--tinta);
-    background: linear-gradient(180deg, rgba(184,146,58,0.18), rgba(0,0,0,0.35));
+    color: var(--ouro-prof);
+    background: linear-gradient(180deg, var(--page-2), var(--page-edge));
     border: 1px solid var(--ouro-medio);
     padding: 3px 10px;
     cursor: pointer;
@@ -674,13 +673,15 @@ kbd {
 }
 
 .chip-recente:hover {
-    background: linear-gradient(180deg, rgba(212,171,77,0.3), rgba(94,71,22,0.4));
-    border-color: var(--ouro-vivo);
-    color: var(--ouro-claro);
+    background: linear-gradient(180deg, var(--ouro-claro), var(--ouro));
+    border-color: var(--ouro-escuro);
+    color: var(--page);
     transform: translateY(-1px);
 }
 
-/* ============ LISTA DE ITENS DO PEDIDO (linha única, compacto) ============ */
+.chip-recente:hover .star { color: var(--page); }
+
+/* ============ LISTA DE ITENS ============ */
 .itens-lista {
     display: flex;
     flex-direction: column;
@@ -695,18 +696,20 @@ kbd {
     padding: 18px 12px;
     border: 1.5px dashed var(--ouro-medio);
     border-radius: 1px;
-    background: rgba(0,0,0,0.2);
+    background: rgba(184,146,58,0.08);
     font-family: 'Cormorant Garamond', serif;
 }
 
 .item-row {
     background:
-        linear-gradient(180deg, rgba(184,146,58,0.10), rgba(0,0,0,0.25));
+        linear-gradient(180deg, rgba(255,255,255,0.45), rgba(184,146,58,0.10));
     border: 1px solid var(--ouro-medio);
     border-left: 3px solid var(--ouro);
     border-radius: 1px;
     padding: 6px 10px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.5),
+        0 1px 2px rgba(94,71,22,0.15);
     display: grid;
     grid-template-columns: minmax(110px, 1.4fr) 56px 60px minmax(120px, 1.8fr) 80px 26px;
     grid-template-areas: "nome qtd preco slider subtotal remover";
@@ -719,9 +722,8 @@ kbd {
     font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 13px;
-    color: var(--ouro-claro);
+    color: var(--ouro-prof);
     letter-spacing: 0.3px;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.5);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -745,8 +747,8 @@ kbd {
 
 .btn-remover:hover {
     background: var(--vermelho-selo);
-    color: var(--tinta);
-    box-shadow: 0 0 0 2px rgba(196,69,47,0.25);
+    color: var(--page);
+    box-shadow: 0 0 0 2px rgba(122,31,21,0.2);
 }
 
 .item-row .col-qtd     { grid-area: qtd; }
@@ -758,6 +760,7 @@ kbd {
     padding: 4px 6px;
     font-size: 13px;
     text-align: right;
+    background: var(--page-2);
 }
 
 .item-row .col-qtd input { text-align: center; }
@@ -781,9 +784,9 @@ kbd {
     white-space: nowrap;
 }
 .preco-meta-min { color: var(--tinta-mute); }
-.preco-meta-max { color: var(--ouro); }
+.preco-meta-max { color: var(--ouro-escuro); }
 
-/* Slider de preço (range) */
+/* Slider de preço */
 input[type="range"].preco-slider {
     appearance: none;
     -webkit-appearance: none;
@@ -799,17 +802,17 @@ input[type="range"].preco-slider {
 
 input[type="range"].preco-slider::-webkit-slider-runnable-track {
     height: 4px;
-    background: linear-gradient(90deg, var(--ouro-prof), var(--ouro-medio), var(--ouro-vivo));
+    background: linear-gradient(90deg, var(--ouro-medio), var(--ouro), var(--ouro-vivo));
     border-radius: 3px;
-    border: 1px solid var(--ouro-prof);
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+    border: 1px solid var(--ouro-escuro);
+    box-shadow: inset 0 1px 2px rgba(94,71,22,0.3);
 }
 
 input[type="range"].preco-slider::-moz-range-track {
     height: 4px;
-    background: linear-gradient(90deg, var(--ouro-prof), var(--ouro-medio), var(--ouro-vivo));
+    background: linear-gradient(90deg, var(--ouro-medio), var(--ouro), var(--ouro-vivo));
     border-radius: 3px;
-    border: 1px solid var(--ouro-prof);
+    border: 1px solid var(--ouro-escuro);
 }
 
 input[type="range"].preco-slider::-webkit-slider-thumb {
@@ -821,7 +824,7 @@ input[type="range"].preco-slider::-webkit-slider-thumb {
     border: 1.5px solid var(--ouro-prof);
     border-radius: 50%;
     margin-top: -6px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,235,180,0.4);
+    box-shadow: 0 2px 3px rgba(94,71,22,0.4), inset 0 1px 0 rgba(255,235,180,0.4);
     cursor: grab;
 }
 
@@ -831,12 +834,12 @@ input[type="range"].preco-slider::-moz-range-thumb {
     background: radial-gradient(circle at 30% 30%, var(--ouro-claro), var(--ouro-escuro));
     border: 1.5px solid var(--ouro-prof);
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    box-shadow: 0 2px 3px rgba(94,71,22,0.4);
     cursor: grab;
 }
 
 input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
-    box-shadow: 0 0 0 3px rgba(212,171,77,0.45), 0 2px 4px rgba(0,0,0,0.6);
+    box-shadow: 0 0 0 3px rgba(184,146,58,0.45), 0 2px 3px rgba(94,71,22,0.4);
 }
 
 .item-row .subtotal {
@@ -844,17 +847,15 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 14px;
-    color: var(--ouro-claro);
-    text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+    color: var(--ouro-prof);
     white-space: nowrap;
 }
 
 .preco-warning {
     border-color: var(--aviso) !important;
-    background: rgba(224,144,83,0.12) !important;
+    background: rgba(154,67,22,0.10) !important;
 }
 
-/* Item compacto em mobile/tablet: empilha em duas linhas */
 @media (max-width: 760px) {
     .item-row {
         grid-template-columns: 1fr auto auto;
@@ -872,15 +873,15 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 /* ============ TOTAIS ============ */
 .totais-section {
     background:
-        linear-gradient(180deg, rgba(184,146,58,0.14), rgba(0,0,0,0.3));
+        linear-gradient(180deg, rgba(255,255,255,0.5), rgba(184,146,58,0.15));
     padding: 14px 16px;
     border-radius: 1px;
     border: 1.5px solid var(--ouro);
     box-shadow:
-        inset 0 1px 0 rgba(184,146,58,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.5),
         inset 0 0 0 3px var(--page),
         inset 0 0 0 4px var(--ouro-medio),
-        0 2px 6px rgba(0,0,0,0.4);
+        0 2px 6px rgba(94,71,22,0.2);
 }
 
 .linha-total {
@@ -905,12 +906,10 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 16px;
-    color: var(--ouro-claro);
+    color: var(--ouro-prof);
 }
 
-.linha-desconto {
-    align-items: center;
-}
+.linha-desconto { align-items: center; }
 
 .desconto-field {
     flex-direction: row;
@@ -935,7 +934,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cinzel', serif;
     font-weight: 700;
     font-size: 13px;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
 }
 
 .desconto-hint {
@@ -965,7 +964,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cinzel', serif;
     font-weight: 900;
     font-size: 13px;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
     letter-spacing: 3.5px;
 }
 
@@ -973,12 +972,11 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cinzel', serif;
     font-weight: 900;
     font-size: 22px;
-    background: linear-gradient(180deg, #f4d57c, var(--ouro-vivo) 45%, var(--ouro-escuro));
+    background: linear-gradient(180deg, var(--ouro-vivo), var(--ouro-escuro));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    color: var(--ouro-claro);
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+    color: var(--ouro-escuro);
 }
 
 .aviso {
@@ -1002,7 +1000,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 .copy-feedback {
     width: 100%;
     text-align: center;
-    color: var(--ouro-claro);
+    color: var(--ouro-escuro);
     font-style: italic;
     min-height: 18px;
     margin-top: 4px;
@@ -1014,7 +1012,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 .book-footer {
     background: var(--page);
     background-image:
-        radial-gradient(ellipse at 50% 100%, rgba(184,146,58,0.10) 0%, transparent 60%);
+        radial-gradient(ellipse at 50% 100%, rgba(184,146,58,0.12) 0%, transparent 60%);
     text-align: center;
     padding: 14px 20px 16px;
     border-top: 1px solid var(--ouro-medio);
@@ -1035,7 +1033,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cinzel', serif;
     font-weight: 500;
     font-size: 10px;
-    color: var(--ouro-vivo);
+    color: var(--ouro-escuro);
     text-transform: uppercase;
     letter-spacing: 2.5px;
     display: flex;
@@ -1061,7 +1059,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     bottom: 12px;
     left: 50%;
     transform: translateX(-50%) translateY(120%);
-    background: linear-gradient(180deg, var(--page-2), var(--bg-mid));
+    background: linear-gradient(180deg, var(--page-2), var(--page-edge));
     border: 1.5px solid var(--ouro);
     border-radius: 4px;
     padding: 8px 14px;
@@ -1069,8 +1067,8 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     align-items: center;
     gap: 10px;
     box-shadow:
-        0 8px 24px rgba(0,0,0,0.7),
-        inset 0 1px 0 rgba(184,146,58,0.3);
+        0 8px 24px rgba(94,71,22,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.5);
     z-index: 50;
     transition: transform 0.3s ease, opacity 0.3s ease;
     opacity: 0;
@@ -1085,7 +1083,7 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 .floating-summary .fs-label {
     font-family: 'Cinzel', serif;
     font-size: 10px;
-    color: var(--tinta-soft);
+    color: var(--ouro-escuro);
     text-transform: uppercase;
     letter-spacing: 2px;
 }
@@ -1094,31 +1092,21 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     font-family: 'Cinzel', serif;
     font-weight: 900;
     font-size: 17px;
-    color: var(--ouro-claro);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    color: var(--ouro-prof);
 }
 
 /* ============ RESPONSIVO ============ */
 @media (max-width: 979px) {
     body { padding: 14px 6px; font-size: 16px; }
     .book-frame { padding: 10px; }
-    .corner { width: 48px; height: 48px; }
-    .book-header { padding: 32px 18px 24px; }
-    .page { padding: 28px 20px 32px; }
+    .corner { width: 36px; height: 36px; }
+    .book-header { padding: 10px 16px; }
+    .page { padding: 18px 16px 22px; }
 
     .book-header h1 { letter-spacing: 2px; }
-    .eyebrow { letter-spacing: 8px; font-size: 14px; }
-    .divider .badge { font-size: 11px; letter-spacing: 2px; padding: 6px 14px; }
-    .motto { font-size: 15px; }
 
-    .item-controles {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    .preco-inputs {
-        grid-template-columns: 100px 1fr;
-    }
+    .item-controles { grid-template-columns: 1fr; gap: 10px; }
+    .preco-inputs { grid-template-columns: 100px 1fr; }
 
     .add-row { flex-direction: column; }
     .acoes-section .btn { width: 100%; }
@@ -1126,15 +1114,15 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     .virtudes { font-size: 10px; letter-spacing: 2px; gap: 8px; }
     .virtudes .dot { display: none; }
 
-    .floating-summary { padding: 10px 14px; gap: 10px; }
-    .floating-summary .fs-valor { font-size: 18px; }
+    .floating-summary { padding: 8px 12px; gap: 8px; }
+    .floating-summary .fs-valor { font-size: 16px; }
 
-    .chip-qtd { font-size: 11px; min-width: 52px; padding: 7px 8px; }
+    .chip-qtd { font-size: 11px; min-width: 48px; padding: 5px 6px; }
 }
 
 @media (max-width: 480px) {
-    .book-header h1 { font-size: 42px; letter-spacing: 1px; }
-    .total-final .valor { font-size: 26px; }
+    .book-header h1 { font-size: 18px; letter-spacing: 1px; }
+    .total-final .valor { font-size: 20px; }
     .qtd-rapida { gap: 4px; }
     .chip-qtd { min-width: 0; flex: 1 1 30%; }
 }
