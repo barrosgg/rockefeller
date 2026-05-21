@@ -201,7 +201,7 @@ function renderListaCombobox() {
         const ativo = posItem === combo.indiceAtivo;
         return `
             <li class="combo-item ${ativo ? "ativo" : ""}" role="option" aria-selected="${ativo}"
-                data-pos="${posItem}" data-produto-idx="${row.produtoIdx}">
+                data-produto-idx="${row.produtoIdx}">
                 <span class="combo-nome">${escapeHtml(p.nome)}</span>
                 <span class="combo-preco">${fmt(p.min)} – ${fmt(p.max)}</span>
             </li>
@@ -517,7 +517,7 @@ function render() {
 
     renderRecentes();
     renderHistorico();
-    atualizarFloatingSummary(t);
+    atualizarFloatingSummary();
 }
 
 // ============ FLOATING SUMMARY ============
@@ -541,10 +541,11 @@ function inicializarFloatingSummary() {
     $("fs-copiar").addEventListener("click", copiarParaDiscord);
 }
 
-function atualizarFloatingSummary(t) {
-    const fs = $("floating-summary");
-    // Se o pedido está vazio, esconde
+function atualizarFloatingSummary() {
+    // Força esconder quando o pedido está vazio (o IntersectionObserver
+    // não dispara só por mudança de estado, então este é o sinal direto).
     if (estado.itens.length === 0) {
+        const fs = $("floating-summary");
         fs.dataset.visible = "false";
         fs.hidden = true;
         fs.setAttribute("aria-hidden", "true");
@@ -552,7 +553,7 @@ function atualizarFloatingSummary(t) {
 }
 
 async function copiarParaDiscord() {
-    const texto = gerarTextoDiscord();
+    const texto = gerarNotaFiscal();
     const feedback = $("copy-feedback");
     feedback.innerHTML = "";
     adicionarAoHistorico();
@@ -744,11 +745,11 @@ function gerarNumeroNota() {
 
 function dataNota() {
     const h = new Date();
-    const dia = h.getDate();
+    const dia = String(h.getDate()).padStart(2, "0");
     const mes = MESES_PT[h.getMonth()];
     const hh = String(h.getHours()).padStart(2, "0");
     const mm = String(h.getMinutes()).padStart(2, "0");
-    return { dia, mes, hh, mm, texto: `${String(dia).padStart(2,"0")} de ${mes} de 1900` };
+    return { hh, mm, texto: `${dia} de ${mes} de 1900` };
 }
 
 // Centraliza texto numa largura dada (sem contar bordas)
@@ -873,10 +874,6 @@ function gerarNotaFiscal() {
     out.push("```");
 
     return out.join("\n");
-}
-
-function gerarTextoDiscord() {
-    return gerarNotaFiscal();
 }
 
 // ============ INIT ============

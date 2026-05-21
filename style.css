@@ -1362,10 +1362,6 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
 
     .book-header h1 { letter-spacing: 2px; }
 
-    .item-controles { grid-template-columns: 1fr; gap: 10px; }
-    .preco-inputs { grid-template-columns: 100px 1fr; }
-
-    .add-row { flex-direction: column; }
     .acoes-section .btn { width: 100%; }
 
     .virtudes { font-size: 10px; letter-spacing: 2px; gap: 8px; }
