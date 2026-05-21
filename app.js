@@ -98,9 +98,11 @@ const estado = carregar() || {
     descontoPercent: 0,
     recentes: [],
     numeroNota: null,
+    cliente: "",
 };
 if (!Array.isArray(estado.recentes)) estado.recentes = [];
 if (typeof estado.numeroNota === "undefined") estado.numeroNota = null;
+if (typeof estado.cliente !== "string") estado.cliente = "";
 
 function carregar() {
     try {
@@ -523,11 +525,14 @@ async function copiarParaDiscord() {
 }
 
 function limparPedido() {
-    if (estado.itens.length === 0) return;
+    if (estado.itens.length === 0 && !estado.cliente) return;
     if (!confirm("Tem certeza que deseja limpar todo o pedido, forasteiro?")) return;
     estado.itens = [];
     estado.descontoPercent = 0;
     estado.numeroNota = null;
+    estado.cliente = "";
+    const cliInput = $("cliente-input");
+    if (cliInput) cliInput.value = "";
     salvar();
     render();
 }
@@ -570,55 +575,58 @@ function gerarNotaFiscal() {
     const t = calcTotais();
     const data = dataNota();
     const numero = estado.numeroNota || "----";
+    const cliente = (estado.cliente || "").trim();
 
-    // Largura interna da caixa (entre as bordas ║)
-    const W = 60;
-    const top = "╔" + "═".repeat(W) + "╗";
-    const mid = "╠" + "═".repeat(W) + "╣";
-    const bot = "╚" + "═".repeat(W) + "╝";
-    const sep = "╟" + "─".repeat(W) + "╢";
-    const linha = (txt) => "║" + centralizar(txt, W) + "║";
-
-    // Colunas dos itens (totalizando W=60):
-    //  1 espaco + 28 nome + 2 + 6 qtd + 2 + 8 unit + 2 + 10 sub + 1 = 60
+    const W = 62;
     const COL_NOME = 28, COL_QTD = 6, COL_UNIT = 8, COL_SUB = 10;
+
+    const center = (txt) => centralizar(txt, W);
+
+    // "  PRODUTO ... QTD ... UNIT. ... SUBTOTAL"
     const itemFmt = (nome, qtd, unit, sub) =>
-        "║ " +
+        "  " +
         nome.padEnd(COL_NOME, " ") + "  " +
         String(qtd).padStart(COL_QTD, " ") + "  " +
         unit.padStart(COL_UNIT, " ") + "  " +
-        sub.padStart(COL_SUB, " ") +
-        " ║";
+        sub.padStart(COL_SUB, " ");
+
+    // Label à direita, valor numa coluna fixa de 12 chars no final
+    const linhaTotal = (label, valor) => {
+        const valStr = valor.padStart(12);
+        const lblStr = label.padStart(W - 12);
+        return lblStr + valStr;
+    };
 
     const totalItens = estado.itens.length;
     const totalUnidades = estado.itens.reduce((s, it) => s + it.quantidade, 0);
 
     const out = [];
+    out.push("```");
 
     // ===== CABEÇALHO =====
-    out.push("```");
-    out.push(top);
-    out.push(linha("★  F A Z E N D A   R O C K E F E L L E R  ★"));
-    out.push(linha("Rockefeller Produtos Agropecuários S.A."));
-    out.push(linha("Flatneck Station · New Hanover · Westfox"));
-    out.push(mid);
-    out.push(linha(`NOTA DE ORÇAMENTO  Nº ${numero}`));
-    out.push(linha(`${data.texto}  —  ${data.hh}:${data.mm}`));
-    out.push(bot);
+    out.push(center("ROCKEFELLER PRODUTOS AGROPECUÁRIOS S.A."));
+    out.push(center("Flatneck Station · New Hanover · Westfox"));
+    out.push(center("─".repeat(46)));
+    out.push("");
+    out.push(center(`NOTA DE ORÇAMENTO  Nº ${numero}`));
+    out.push(center(`${data.texto}  —  ${data.hh}:${data.mm}`));
     out.push("");
 
-    // ===== TABELA DE ITENS =====
+    // ===== CLIENTE =====
+    if (cliente) {
+        out.push(`  Cliente:  ${truncar(cliente, W - 12)}`);
+        out.push("");
+    }
+
+    // ===== ITENS =====
     if (estado.itens.length === 0) {
-        out.push("╔" + "═".repeat(W) + "╗");
-        out.push(linha("(Nenhum item lançado)"));
-        out.push("╚" + "═".repeat(W) + "╝");
+        out.push(center("( Nenhum item lançado )"));
         out.push("```");
         return out.join("\n");
     }
 
-    out.push("╔" + "═".repeat(W) + "╗");
     out.push(itemFmt("PRODUTO", "QTD", "UNIT.", "SUBTOTAL"));
-    out.push(mid);
+    out.push("  " + "─".repeat(W - 4));
 
     for (const it of estado.itens) {
         const nome = truncar(it.produtoId, COL_NOME);
@@ -626,35 +634,27 @@ function gerarNotaFiscal() {
         out.push(itemFmt(nome, it.quantidade, fmt(it.precoUnit), fmt(sub)));
     }
 
-    out.push(mid);
+    out.push("  " + "─".repeat(W - 4));
+    out.push(center(`Itens: ${totalItens}  ·  Unidades: ${totalUnidades}`));
+    out.push("");
 
     // ===== TOTAIS =====
-    const linhaTotal = (rotulo, valor) => {
-        // Rótulo à direita, valor à direita
-        const espacoTotal = W - 2;
-        const valorStr = valor.padStart(COL_SUB);
-        const rotuloLargura = espacoTotal - valorStr.length - 1;
-        return "║ " + rotulo.padStart(rotuloLargura, " ") + " " + valorStr + " ║";
-    };
-
-    out.push(linhaTotal(`Itens: ${totalItens}  ·  Unidades: ${totalUnidades}`, ""));
-    out.push(sep);
     out.push(linhaTotal("SUBTOTAL:", fmt(t.subtotal)));
     if (t.descAplicado > 0) {
         const valorDesc = t.subtotal - t.total;
         out.push(linhaTotal(`DESCONTO (${t.descAplicado.toFixed(2)}%):`, "-" + fmt(valorDesc)));
     }
-    out.push(sep);
+    out.push(" ".repeat(W - 30) + "─".repeat(30));
     out.push(linhaTotal("TOTAL A PAGAR:", fmt(t.total)));
-    out.push(bot);
+    out.push("");
     out.push("");
 
-    // ===== RODAPÉ =====
+    // ===== ASSINATURAS =====
     out.push("  Atendido por: ____________________________");
     out.push("  Assinatura:   ____________________________");
     out.push("");
-    out.push("    ✦  Tradição · Trabalho · Visão · Legado  ✦");
-    out.push("       Westfox Trading Co. — Estab. 1899");
+    out.push(center("✦  Tradição · Trabalho · Visão · Legado  ✦"));
+    out.push(center("Rockefeller Produtos Agropecuários S.A."));
     out.push("```");
 
     return out.join("\n");
@@ -719,6 +719,14 @@ function init() {
 
     $("copiar-btn").addEventListener("click", copiarParaDiscord);
     $("limpar-btn").addEventListener("click", limparPedido);
+
+    // Cliente
+    const cliInput = $("cliente-input");
+    cliInput.value = estado.cliente || "";
+    cliInput.addEventListener("input", (e) => {
+        estado.cliente = e.target.value;
+        salvar();
+    });
 
     // Atalho global "/" para focar busca
     document.addEventListener("keydown", (e) => {
