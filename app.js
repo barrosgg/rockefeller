@@ -106,16 +106,6 @@ if (typeof estado.numeroNota === "undefined") estado.numeroNota = null;
 if (typeof estado.cliente !== "string") estado.cliente = "";
 if (typeof estado.anotacoes !== "string") estado.anotacoes = "";
 
-// ============ KITS ============
-const KITS = [
-    { id: "padaria",     nome: "Padaria",     emoji: "🥖", itens: [["Trigo", 50], ["Açúcar", 20], ["Leite", 20], ["Ovo", 30], ["Manteiga", 10]] },
-    { id: "acougue",     nome: "Açougue",     emoji: "🥩", itens: [["Carne de Vaca", 30], ["Carne de Porco", 20], ["Ovo", 10]] },
-    { id: "laticinios",  nome: "Laticínios",  emoji: "🧀", itens: [["Leite", 30], ["Queijo", 15], ["Coalhada", 10], ["Manteiga", 8], ["Ricota", 8], ["Requeijão", 5]] },
-    { id: "pomar",       nome: "Pomar",       emoji: "🍎", itens: [["Maçã", 30], ["Banana", 30], ["Laranja", 30], ["Pêssego", 20], ["Uva", 20], ["Ameixa", 20]] },
-    { id: "lavoura",     nome: "Lavoura",     emoji: "🌾", itens: [["Saco de Trigo", 5], ["Saco de Milho", 5], ["Saco de Cana-de-açúcar", 5], ["Fertilizante", 30]] },
-    { id: "especiarias", nome: "Especiarias", emoji: "🌿", itens: [["Café", 20], ["Cacau", 15], ["Hortelã", 10], ["Tomilho", 10], ["Orégano", 10]] },
-];
-
 // ============ HISTÓRICO ============
 const HISTORICO_KEY = "fazenda-rockefeller-historico-v1";
 
@@ -607,38 +597,6 @@ function limparPedido() {
     render();
 }
 
-// ============ KITS ============
-function renderKits() {
-    const grid = $("kits-grid");
-    grid.innerHTML = KITS.map((k, i) => `
-        <button type="button" class="kit-chip" data-kit-idx="${i}"
-                title="${k.itens.map(([n, q]) => n + ' ×' + q).join(', ')}">
-            <span class="emoji" aria-hidden="true">${k.emoji}</span>
-            <span>${escapeHtml(k.nome)}</span>
-        </button>
-    `).join("");
-}
-
-function aplicarKit(idx) {
-    const kit = KITS[idx];
-    if (!kit) return;
-    for (const [nome, qtd] of kit.itens) {
-        const pIdx = indiceProduto(nome);
-        if (pIdx < 0) continue;
-        const p = PRODUTOS[pIdx];
-        const existente = estado.itens.find(it => it.produtoId === nome);
-        if (existente) {
-            existente.quantidade += qtd;
-        } else {
-            estado.itens.push({ produtoId: nome, quantidade: qtd, precoUnit: p.max });
-        }
-        registrarRecente(nome);
-    }
-    if (!estado.numeroNota) estado.numeroNota = gerarNumeroNota();
-    salvar();
-    render();
-}
-
 // ============ HISTÓRICO ============
 function adicionarAoHistorico() {
     if (estado.itens.length === 0) return;
@@ -928,7 +886,6 @@ function init() {
 
     inicializarCombobox();
     inicializarFloatingSummary();
-    renderKits();
 
     $("add-btn").addEventListener("click", adicionarItem);
 
@@ -996,13 +953,6 @@ function init() {
     anotInput.addEventListener("input", (e) => {
         estado.anotacoes = e.target.value;
         salvar();
-    });
-
-    // Kits (delegação)
-    $("kits-grid").addEventListener("click", (e) => {
-        const btn = e.target.closest("[data-kit-idx]");
-        if (!btn) return;
-        aplicarKit(parseInt(btn.dataset.kitIdx, 10));
     });
 
     // Histórico (delegação: load + delete)
