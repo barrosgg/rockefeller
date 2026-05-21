@@ -6,17 +6,65 @@
     <title>Livro de Orçamento da Fazenda Rockefeller</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="book">
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <symbol id="orn-corner" viewBox="0 0 100 100">
+                <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                    <path d="M 4 4 L 96 4"/>
+                    <path d="M 4 4 L 4 96"/>
+                    <path d="M 10 10 L 70 10"/>
+                    <path d="M 10 10 L 10 70"/>
+                    <path d="M 14 14 Q 40 14 40 40 Q 40 14 66 14"/>
+                    <path d="M 14 14 Q 14 40 40 40 Q 14 40 14 66"/>
+                    <circle cx="40" cy="40" r="3" fill="currentColor"/>
+                    <path d="M 18 30 Q 22 26 26 30 Q 22 34 18 30 Z" fill="currentColor"/>
+                    <path d="M 30 18 Q 26 22 30 26 Q 34 22 30 18 Z" fill="currentColor"/>
+                    <path d="M 50 14 L 56 18 L 50 22" />
+                    <path d="M 14 50 L 18 56 L 22 50" />
+                </g>
+            </symbol>
+            <symbol id="orn-flourish" viewBox="0 0 200 24">
+                <g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+                    <path d="M 0 12 L 70 12"/>
+                    <path d="M 130 12 L 200 12"/>
+                    <path d="M 70 12 Q 80 4 90 12 Q 100 20 110 12 Q 120 4 130 12"/>
+                    <circle cx="100" cy="12" r="2.4" fill="currentColor"/>
+                    <path d="M 60 12 L 56 8 M 60 12 L 56 16"/>
+                    <path d="M 140 12 L 144 8 M 140 12 L 144 16"/>
+                </g>
+            </symbol>
+        </defs>
+    </svg>
+
+    <div class="frame">
+        <svg class="corner corner-tl" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
+        <svg class="corner corner-tr" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
+        <svg class="corner corner-bl" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
+        <svg class="corner corner-br" viewBox="0 0 100 100" aria-hidden="true"><use href="#orn-corner"/></svg>
+
         <div class="page">
             <header class="header">
-                <div class="ornament">✦ ✦ ✦</div>
-                <h1>Livro de Orçamento</h1>
-                <h2>da Fazenda Rockefeller</h2>
-                <div class="ornament">— Honest goods, honest prices —</div>
+                <div class="crest">
+                    <svg viewBox="0 0 120 120" aria-hidden="true">
+                        <circle cx="60" cy="60" r="56" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="0.8"/>
+                        <path d="M 60 18 L 64 38 L 84 40 L 68 52 L 74 72 L 60 60 L 46 72 L 52 52 L 36 40 L 56 38 Z"
+                              fill="currentColor" opacity="0.85"/>
+                        <text x="60" y="92" text-anchor="middle" font-family="Cinzel, serif" font-size="18" font-weight="900" fill="currentColor">R</text>
+                    </svg>
+                </div>
+                <div class="eyebrow">Família</div>
+                <h1>Rockefeller</h1>
+                <div class="divider">
+                    <span class="line"></span>
+                    <span class="badge">Livro de Orçamento</span>
+                    <span class="line"></span>
+                </div>
+                <p class="motto">— Tradição · Trabalho · Visão · Legado —</p>
             </header>
 
             <section class="add-section">
@@ -69,8 +117,15 @@
             </section>
 
             <footer class="footer">
-                <div class="ornament">★ ★ ★</div>
-                <p>Westfox Trading Co. — Estabelecida em 1899</p>
+                <svg class="flourish" viewBox="0 0 200 24" aria-hidden="true"><use href="#orn-flourish"/></svg>
+                <p class="virtudes">
+                    <span>Disciplina em nossas ações</span>
+                    <span class="dot">✦</span>
+                    <span>Lealdade em nossas alianças</span>
+                    <span class="dot">✦</span>
+                    <span>Excelência em nossos resultados</span>
+                </p>
+                <p class="assinatura">Família Rockefeller — Unidos por valores, guiados por um legado.</p>
             </footer>
         </div>
     </div>
