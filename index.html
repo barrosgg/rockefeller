@@ -70,10 +70,15 @@
             <section class="add-section">
                 <h3>Acrescentar ao Pedido</h3>
                 <div class="add-row">
-                    <label class="field grow">
+                    <div class="field grow combobox" id="combobox">
                         <span>Produto</span>
-                        <select id="produto-select"></select>
-                    </label>
+                        <input type="text" id="produto-busca" autocomplete="off" spellcheck="false"
+                               placeholder="Digite para buscar (ex: açúcar, saco, leite...)"
+                               aria-label="Buscar produto" aria-autocomplete="list"
+                               aria-controls="produto-lista" aria-expanded="false">
+                        <button type="button" id="combobox-toggle" class="combobox-toggle" aria-label="Abrir lista">▾</button>
+                        <ul id="produto-lista" class="combobox-list" role="listbox" hidden></ul>
+                    </div>
                     <label class="field qty">
                         <span>Quantidade</span>
                         <input type="number" id="qtd-input" min="1" step="1" value="1">

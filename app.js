@@ -67,6 +67,29 @@ const PRODUTOS = [
 
 PRODUTOS.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
+function categoriaDe(nome) {
+    if (nome.startsWith("Saco de")) return "Sacos";
+    if (/(Carne|Couro|Ovo|Ração)/i.test(nome)) return "Animais & Insumos";
+    if (/(Leite|Queijo|Manteiga|Coalhada|Ricota|Requeijão)/i.test(nome)) return "Laticínios";
+    if (/(Açúcar|Cacau|Café|Hortelã|Orégano|Tomilho|Lúpulo|Tabaco|Giseng)/i.test(nome)) return "Especiarias & Outros";
+    if (/(Algodão|Lã|Fertilizante)/i.test(nome)) return "Matérias-primas";
+    return "Frutas, Grãos & Vegetais";
+}
+PRODUTOS.forEach(p => { p.categoria = categoriaDe(p.nome); });
+
+const ORDEM_CATEGORIAS = [
+    "Frutas, Grãos & Vegetais",
+    "Laticínios",
+    "Animais & Insumos",
+    "Especiarias & Outros",
+    "Matérias-primas",
+    "Sacos",
+];
+
+function semAcento(s) {
+    return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+}
+
 const STORAGE_KEY = "fazenda-rockefeller-pedido-v1";
 
 const estado = carregar() || {
@@ -96,27 +119,182 @@ function indiceProduto(nome) {
     return PRODUTOS.findIndex(p => p.nome === nome);
 }
 
-function popularSelect() {
-    const sel = $("produto-select");
-    sel.innerHTML = PRODUTOS.map((p, i) =>
-        `<option value="${i}">${p.nome} &nbsp;($${p.min.toFixed(2)} – $${p.max.toFixed(2)})</option>`
-    ).join("");
+// ============ COMBOBOX (busca + lista filtrada) ============
+const combo = {
+    aberto: false,
+    indiceAtivo: -1,
+    selecionado: null,  // índice em PRODUTOS
+    filtrados: [],      // [{tipo:'cat',nome} | {tipo:'item',produtoIdx,produto}]
+};
+
+function filtrarProdutos(termo) {
+    const q = semAcento(termo.trim());
+    const itensFiltrados = q
+        ? PRODUTOS.filter(p => semAcento(p.nome).includes(q))
+        : PRODUTOS.slice();
+
+    // Agrupa por categoria preservando ORDEM_CATEGORIAS
+    const lista = [];
+    for (const cat of ORDEM_CATEGORIAS) {
+        const doGrupo = itensFiltrados.filter(p => p.categoria === cat);
+        if (doGrupo.length === 0) continue;
+        lista.push({ tipo: "cat", nome: cat });
+        for (const p of doGrupo) {
+            lista.push({ tipo: "item", produtoIdx: PRODUTOS.indexOf(p), produto: p });
+        }
+    }
+    return lista;
+}
+
+function renderListaCombobox() {
+    const ul = $("produto-lista");
+    if (combo.filtrados.length === 0) {
+        ul.innerHTML = `<li class="combo-vazio">Nenhum produto encontrado.</li>`;
+        return;
+    }
+    // Filtra apenas os "item" para indexação ativa
+    const itemsOnly = combo.filtrados
+        .map((row, i) => ({ row, i }))
+        .filter(({ row }) => row.tipo === "item");
+
+    let posItem = -1;
+    ul.innerHTML = combo.filtrados.map((row, i) => {
+        if (row.tipo === "cat") {
+            return `<li class="combo-cat" role="presentation">${escapeHtml(row.nome)}</li>`;
+        }
+        posItem++;
+        const p = row.produto;
+        const ativo = posItem === combo.indiceAtivo;
+        return `
+            <li class="combo-item ${ativo ? "ativo" : ""}" role="option" aria-selected="${ativo}"
+                data-pos="${posItem}" data-produto-idx="${row.produtoIdx}">
+                <span class="combo-nome">${escapeHtml(p.nome)}</span>
+                <span class="combo-preco">${fmt(p.min)} – ${fmt(p.max)}</span>
+            </li>
+        `;
+    }).join("");
+
+    // Scroll para item ativo
+    const ativo = ul.querySelector(".combo-item.ativo");
+    if (ativo) ativo.scrollIntoView({ block: "nearest" });
+}
+
+function abrirCombobox() {
+    if (combo.aberto) return;
+    combo.aberto = true;
+    $("produto-lista").hidden = false;
+    $("produto-busca").setAttribute("aria-expanded", "true");
+    $("combobox").classList.add("aberto");
+}
+
+function fecharCombobox() {
+    combo.aberto = false;
+    combo.indiceAtivo = -1;
+    $("produto-lista").hidden = true;
+    $("produto-busca").setAttribute("aria-expanded", "false");
+    $("combobox").classList.remove("aberto");
+}
+
+function itensFiltradosOnly() {
+    return combo.filtrados.filter(r => r.tipo === "item");
+}
+
+function selecionarProduto(produtoIdx) {
+    combo.selecionado = produtoIdx;
+    const p = PRODUTOS[produtoIdx];
+    $("produto-busca").value = p.nome;
+    fecharCombobox();
     atualizarHintProduto();
-    sel.addEventListener("change", atualizarHintProduto);
+    $("qtd-input").focus();
+    $("qtd-input").select();
 }
 
 function atualizarHintProduto() {
-    const i = parseInt($("produto-select").value, 10);
-    const p = PRODUTOS[i];
-    if (!p) { $("produto-hint").textContent = ""; return; }
+    if (combo.selecionado == null) { $("produto-hint").textContent = ""; return; }
+    const p = PRODUTOS[combo.selecionado];
     $("produto-hint").textContent = `Faixa permitida: ${fmt(p.min)} a ${fmt(p.max)} por unidade.`;
 }
 
+function inicializarCombobox() {
+    const input = $("produto-busca");
+    const ul = $("produto-lista");
+    const toggle = $("combobox-toggle");
+
+    const atualizar = () => {
+        combo.filtrados = filtrarProdutos(input.value);
+        const items = itensFiltradosOnly();
+        if (combo.indiceAtivo >= items.length) combo.indiceAtivo = items.length - 1;
+        if (combo.indiceAtivo < 0 && items.length > 0) combo.indiceAtivo = 0;
+        renderListaCombobox();
+    };
+
+    input.addEventListener("focus", () => { atualizar(); abrirCombobox(); });
+    input.addEventListener("input", () => {
+        combo.selecionado = null;
+        combo.indiceAtivo = 0;
+        atualizar();
+        abrirCombobox();
+        atualizarHintProduto();
+    });
+
+    input.addEventListener("keydown", (e) => {
+        const items = itensFiltradosOnly();
+        if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (!combo.aberto) { atualizar(); abrirCombobox(); }
+            combo.indiceAtivo = Math.min(items.length - 1, combo.indiceAtivo + 1);
+            renderListaCombobox();
+        } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            combo.indiceAtivo = Math.max(0, combo.indiceAtivo - 1);
+            renderListaCombobox();
+        } else if (e.key === "Enter") {
+            e.preventDefault();
+            if (combo.aberto && items[combo.indiceAtivo]) {
+                selecionarProduto(items[combo.indiceAtivo].produtoIdx);
+            } else if (combo.selecionado != null) {
+                adicionarItem();
+            }
+        } else if (e.key === "Escape") {
+            fecharCombobox();
+        }
+    });
+
+    toggle.addEventListener("click", () => {
+        if (combo.aberto) { fecharCombobox(); }
+        else { atualizar(); abrirCombobox(); input.focus(); }
+    });
+
+    ul.addEventListener("mousedown", (e) => {
+        // mousedown (não click) para evitar perder foco antes
+        const li = e.target.closest(".combo-item");
+        if (!li) return;
+        e.preventDefault();
+        const idx = parseInt(li.dataset.produtoIdx, 10);
+        selecionarProduto(idx);
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest("#combobox")) fecharCombobox();
+    });
+}
+
 function adicionarItem() {
-    const i = parseInt($("produto-select").value, 10);
+    if (combo.selecionado == null) {
+        // Tenta resolver pelo texto digitado: match exato (sem acento)
+        const termo = semAcento($("produto-busca").value.trim());
+        if (termo) {
+            const match = PRODUTOS.findIndex(p => semAcento(p.nome) === termo);
+            if (match >= 0) combo.selecionado = match;
+        }
+    }
+    if (combo.selecionado == null) {
+        $("produto-hint").textContent = "Escolha um produto da lista, forasteiro.";
+        $("produto-busca").focus();
+        return;
+    }
     const qtd = Math.max(1, Math.floor(parseFloat($("qtd-input").value) || 1));
-    const p = PRODUTOS[i];
-    if (!p) return;
+    const p = PRODUTOS[combo.selecionado];
 
     // Se já existe, soma a quantidade
     const existente = estado.itens.find(it => it.produtoId === p.nome);
@@ -130,6 +308,10 @@ function adicionarItem() {
         });
     }
     $("qtd-input").value = 1;
+    $("produto-busca").value = "";
+    combo.selecionado = null;
+    $("produto-hint").textContent = "";
+    $("produto-busca").focus();
     salvar();
     render();
 }
@@ -317,7 +499,7 @@ function limparPedido() {
 }
 
 function init() {
-    popularSelect();
+    inicializarCombobox();
 
     $("add-btn").addEventListener("click", adicionarItem);
     $("qtd-input").addEventListener("keydown", (e) => {
