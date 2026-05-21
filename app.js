@@ -1,94 +1,6 @@
 /* ====== Livro de Orçamento — Família Rockefeller ======
-   Calculadora estática, 100% client-side. */
-
-const PRODUTOS = [
-    { nome: "Açúcar",                 min: 0.50, max: 0.60 },
-    { nome: "Algodão",                min: 0.40, max: 0.50 },
-    { nome: "Alho",                   min: 0.40, max: 0.50 },
-    { nome: "Ameixa",                 min: 0.40, max: 0.50 },
-    { nome: "Amora",                  min: 0.40, max: 0.50 },
-    { nome: "Banana",                 min: 0.40, max: 0.50 },
-    { nome: "Batata",                 min: 0.40, max: 0.50 },
-    { nome: "Cacau",                  min: 0.40, max: 0.50 },
-    { nome: "Café",                   min: 0.40, max: 0.50 },
-    { nome: "Cana-de-açúcar",         min: 0.40, max: 0.50 },
-    { nome: "Carne de Porco",         min: 0.60, max: 0.80 },
-    { nome: "Carne de Vaca",          min: 1.50, max: 2.00 },
-    { nome: "Cenoura",                min: 0.40, max: 0.50 },
-    { nome: "Coalhada",               min: 1.20, max: 1.50 },
-    { nome: "Couro de Cavalo",        min: 0.80, max: 1.00 },
-    { nome: "Fertilizante",           min: 0.50, max: 0.80 },
-    { nome: "Giseng Americano",       min: 0.40, max: 0.50 },
-    { nome: "Giseng-do-Alaska",       min: 0.40, max: 0.50 },
-    { nome: "Hortelã",                min: 0.40, max: 0.50 },
-    { nome: "Lã de Ovelha",           min: 0.50, max: 0.60 },
-    { nome: "Laranja",                min: 0.40, max: 0.50 },
-    { nome: "Leite",                  min: 0.50, max: 0.60 },
-    { nome: "Leite de Cabra",         min: 0.60, max: 0.75 },
-    { nome: "Lúpulo",                 min: 0.40, max: 0.50 },
-    { nome: "Maçã",                   min: 0.40, max: 0.50 },
-    { nome: "Manteiga",               min: 1.70, max: 2.30 },
-    { nome: "Milho",                  min: 0.40, max: 0.50 },
-    { nome: "Orégano",                min: 0.40, max: 0.50 },
-    { nome: "Ovo",                    min: 0.60, max: 0.80 },
-    { nome: "Pêssego",                min: 0.40, max: 0.50 },
-    { nome: "Queijo",                 min: 1.20, max: 1.50 },
-    { nome: "Queijo de Cabra",        min: 2.00, max: 2.50 },
-    { nome: "Ração",                  min: 15.00, max: 18.00 },
-    { nome: "Requeijão",              min: 3.60, max: 4.50 },
-    { nome: "Ricota",                 min: 1.20, max: 1.50 },
-    { nome: "Saco de Algodão",        min: 15.00, max: 18.00 },
-    { nome: "Saco de Alho",           min: 15.00, max: 18.00 },
-    { nome: "Saco de Ameixa",         min: 15.00, max: 18.00 },
-    { nome: "Saco de Amora",          min: 15.00, max: 18.00 },
-    { nome: "Saco de Banana",         min: 15.00, max: 18.00 },
-    { nome: "Saco de Batata",         min: 15.00, max: 18.00 },
-    { nome: "Saco de Cacau",          min: 15.00, max: 18.00 },
-    { nome: "Saco de Café",           min: 15.00, max: 18.00 },
-    { nome: "Saco de Cana-de-açúcar", min: 15.00, max: 18.00 },
-    { nome: "Saco de Cenoura",        min: 15.00, max: 18.00 },
-    { nome: "Saco de Giseng Americano",  min: 15.00, max: 18.00 },
-    { nome: "Saco de Giseng-do-Alaska",  min: 15.00, max: 18.00 },
-    { nome: "Saco de Hortelã",        min: 15.00, max: 18.00 },
-    { nome: "Saco de Laranja",        min: 15.00, max: 18.00 },
-    { nome: "Saco de Lúpulo",         min: 15.00, max: 18.00 },
-    { nome: "Saco de Maçã",           min: 15.00, max: 18.00 },
-    { nome: "Saco de Milho",          min: 15.00, max: 18.00 },
-    { nome: "Saco de Orégano",        min: 15.00, max: 18.00 },
-    { nome: "Saco de Pêssego",        min: 15.00, max: 18.00 },
-    { nome: "Saco de Tomilho",        min: 15.00, max: 18.00 },
-    { nome: "Saco de Trigo",          min: 15.00, max: 18.00 },
-    { nome: "Saco de Uva",            min: 15.00, max: 18.00 },
-    { nome: "Tabaco",                 min: 0.40, max: 0.50 },
-    { nome: "Tomilho",                min: 0.40, max: 0.50 },
-    { nome: "Trigo",                  min: 0.40, max: 0.50 },
-    { nome: "Uva",                    min: 0.40, max: 0.50 },
-];
-
-PRODUTOS.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
-
-function categoriaDe(nome) {
-    if (nome.startsWith("Saco de")) return "Sacos";
-    if (/(Carne|Couro|Ovo|Ração)/i.test(nome)) return "Animais & Insumos";
-    if (/(Leite|Queijo|Manteiga|Coalhada|Ricota|Requeijão)/i.test(nome)) return "Laticínios";
-    if (/(Açúcar|Cacau|Café|Hortelã|Orégano|Tomilho|Lúpulo|Tabaco|Giseng)/i.test(nome)) return "Especiarias & Outros";
-    if (/(Algodão|Lã|Fertilizante)/i.test(nome)) return "Matérias-primas";
-    return "Frutas, Grãos & Vegetais";
-}
-PRODUTOS.forEach(p => { p.categoria = categoriaDe(p.nome); });
-
-const ORDEM_CATEGORIAS = [
-    "Frutas, Grãos & Vegetais",
-    "Laticínios",
-    "Animais & Insumos",
-    "Especiarias & Outros",
-    "Matérias-primas",
-    "Sacos",
-];
-
-function semAcento(s) {
-    return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-}
+   Calculadora estática, 100% client-side.
+   Depende de: produtos.js (catálogo + helpers) e nota.js (cálculos + nota fiscal). */
 
 const STORAGE_KEY = "fazenda-rockefeller-pedido-v2";
 const MAX_RECENTES = 6;
@@ -139,17 +51,6 @@ function salvar() {
 }
 
 const $ = (id) => document.getElementById(id);
-const fmt = (n) => `$${n.toFixed(2)}`;
-const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-
-function indiceProduto(nome) {
-    return PRODUTOS.findIndex(p => p.nome === nome);
-}
-
-function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c =>
-        ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
-}
 
 function registrarRecente(nome) {
     estado.recentes = [nome, ...estado.recentes.filter(n => n !== nome)].slice(0, MAX_RECENTES);
@@ -397,41 +298,6 @@ function atualizarPreco(idx, valor) {
     render();
 }
 
-function calcTotais() {
-    let subtotal = 0;
-    let minTotal = 0;
-    for (const it of estado.itens) {
-        subtotal += it.precoUnit * it.quantidade;
-        const p = PRODUTOS[indiceProduto(it.produtoId)];
-        minTotal += p.min * it.quantidade;
-    }
-    let descMaxPct = 100;
-    if (subtotal > 0) {
-        descMaxPct = Math.max(0, (1 - minTotal / subtotal) * 100);
-    }
-    let descAplicado = estado.descontoPercent;
-    let descClampado = false;
-    if (descAplicado > descMaxPct) {
-        descAplicado = descMaxPct;
-        descClampado = true;
-    }
-    if (descAplicado < 0) descAplicado = 0;
-    const total = subtotal * (1 - descAplicado / 100);
-    const margem = total - minTotal;
-    const margemPct = minTotal > 0 ? (margem / minTotal) * 100 : 0;
-    return { subtotal, minTotal, descMaxPct, descAplicado, descClampado, total, margem, margemPct };
-}
-
-function subtotaisPorCategoria() {
-    const grupos = {};
-    for (const it of estado.itens) {
-        const p = PRODUTOS[indiceProduto(it.produtoId)];
-        const sub = it.precoUnit * it.quantidade;
-        grupos[p.categoria] = (grupos[p.categoria] || 0) + sub;
-    }
-    return grupos;
-}
-
 function render() {
     const lista = $("itens-lista");
 
@@ -473,7 +339,7 @@ function render() {
         }).join("");
     }
 
-    const t = calcTotais();
+    const t = calcTotais(estado);
     $("subtotal-val").textContent = fmt(t.subtotal);
     $("total-val").textContent = fmt(t.total);
     $("fs-valor").textContent = fmt(t.total);
@@ -495,7 +361,7 @@ function render() {
     // Subtotais por categoria
     const catInfo = $("categorias-info");
     if (estado.itens.length >= 2) {
-        const grupos = subtotaisPorCategoria();
+        const grupos = subtotaisPorCategoria(estado);
         const partes = Object.entries(grupos)
             .sort((a, b) => b[1] - a[1])
             .map(([nome, val]) =>
@@ -521,22 +387,20 @@ function render() {
 }
 
 // ============ FLOATING SUMMARY ============
-let floatingObserver = null;
 function inicializarFloatingSummary() {
     const totaisEl = $("totais-section");
     const fs = $("floating-summary");
 
     if (!('IntersectionObserver' in window)) return;
 
-    floatingObserver = new IntersectionObserver((entries) => {
+    new IntersectionObserver((entries) => {
         for (const entry of entries) {
             const visivel = !entry.isIntersecting && estado.itens.length > 0;
             fs.dataset.visible = visivel ? "true" : "false";
             fs.hidden = !visivel;
             fs.setAttribute("aria-hidden", visivel ? "false" : "true");
         }
-    }, { threshold: 0.05 });
-    floatingObserver.observe(totaisEl);
+    }, { threshold: 0.05 }).observe(totaisEl);
 
     $("fs-copiar").addEventListener("click", copiarParaDiscord);
 }
@@ -553,7 +417,7 @@ function atualizarFloatingSummary() {
 }
 
 async function copiarParaDiscord() {
-    const texto = gerarNotaFiscal();
+    const texto = gerarNotaFiscal(estado);
     const feedback = $("copy-feedback");
     feedback.innerHTML = "";
     adicionarAoHistorico();
@@ -601,7 +465,7 @@ function limparPedido() {
 // ============ HISTÓRICO ============
 function adicionarAoHistorico() {
     if (estado.itens.length === 0) return;
-    const t = calcTotais();
+    const t = calcTotais(estado);
     const entry = {
         numero: estado.numeroNota,
         cliente: estado.cliente,
@@ -611,7 +475,6 @@ function adicionarAoHistorico() {
         total: t.total,
         salvoEm: Date.now(),
     };
-    // Atualiza se mesmo numero ja existe; senao adiciona ao topo
     historico = [entry, ...historico.filter(h => h.numero !== entry.numero)].slice(0, 20);
     salvarHistorico();
     renderHistorico();
@@ -630,7 +493,6 @@ function carregarDoHistorico(idx) {
     $("anotacoes-input").value = estado.anotacoes;
     salvar();
     render();
-    // Scroll suave pro topo da lista de itens
     document.getElementById("itens-lista")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -672,43 +534,35 @@ function renderHistorico() {
     }).join("");
 }
 
-// ============ URL SHARE ============
+// ============ URL SHARE (calculadora gera link pra view-only) ============
+function urlBase() {
+    let base = location.pathname.replace(/index\.html$/, "");
+    if (!base.endsWith("/")) base += "/";
+    return location.origin + base;
+}
+
 function gerarUrlPedido() {
-    const compact = {
-        i: estado.itens.map(it => [it.produtoId, it.quantidade, Math.round(it.precoUnit * 100) / 100]),
-        d: estado.descontoPercent || 0,
-        c: estado.cliente || "",
-        a: estado.anotacoes || "",
-        n: estado.numeroNota || "",
-    };
-    const json = JSON.stringify(compact);
-    const b64 = btoa(unescape(encodeURIComponent(json)));
-    return `${location.origin}${location.pathname}#p=${b64}`;
+    const b64 = encodePedidoTuple(estado);
+    return `${urlBase()}pedido.html#p=${b64}`;
 }
 
 function carregarDeUrl() {
     if (!location.hash.startsWith("#p=")) return false;
-    try {
-        const b64 = location.hash.slice(3);
-        const json = decodeURIComponent(escape(atob(b64)));
-        const data = JSON.parse(json);
-        if (!Array.isArray(data.i)) return false;
-        if (estado.itens.length > 0 &&
-            !confirm("Há um pedido neste link. Carregar substitui o pedido atual. Continuar?")) {
-            history.replaceState(null, "", location.pathname);
-            return false;
-        }
-        estado.itens = data.i.map(([p, q, u]) => ({ produtoId: p, quantidade: q, precoUnit: u }));
-        estado.descontoPercent = data.d || 0;
-        estado.cliente = data.c || "";
-        estado.anotacoes = data.a || "";
-        estado.numeroNota = data.n || gerarNumeroNota();
+    const decoded = decodePedidoBase64(location.hash.slice(3));
+    if (!decoded) return false;
+    if (estado.itens.length > 0 &&
+        !confirm("Há um pedido neste link. Carregar substitui o pedido atual. Continuar?")) {
         history.replaceState(null, "", location.pathname);
-        salvar();
-        return true;
-    } catch {
         return false;
     }
+    estado.itens = decoded.itens;
+    estado.descontoPercent = decoded.descontoPercent;
+    estado.cliente = decoded.cliente;
+    estado.anotacoes = decoded.anotacoes;
+    estado.numeroNota = decoded.numeroNota || gerarNumeroNota();
+    history.replaceState(null, "", location.pathname);
+    salvar();
+    return true;
 }
 
 async function copiarLink() {
@@ -722,7 +576,7 @@ async function copiarLink() {
     const feedback = $("copy-feedback");
     try {
         await navigator.clipboard.writeText(url);
-        feedback.textContent = "✓ Link copiado! Cole no Discord — o destinatário verá o pedido montado.";
+        feedback.textContent = "✓ Link copiado! Cole no Discord — abre numa página de visualização.";
     } catch {
         feedback.textContent = `Link: ${url}`;
     }
@@ -731,154 +585,8 @@ async function copiarLink() {
     }, 5000);
 }
 
-// ============ NOTA FISCAL ============
-const MESES_PT = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-];
-
-function gerarNumeroNota() {
-    // 4 dígitos pseudo-aleatórios baseados em ms — visualmente "sequencial"
-    const n = (Date.now() % 9000) + 1000;
-    return String(n).padStart(4, "0");
-}
-
-function dataNota() {
-    const h = new Date();
-    const dia = String(h.getDate()).padStart(2, "0");
-    const mes = MESES_PT[h.getMonth()];
-    const hh = String(h.getHours()).padStart(2, "0");
-    const mm = String(h.getMinutes()).padStart(2, "0");
-    return { hh, mm, texto: `${dia} de ${mes} de 1900` };
-}
-
-// Centraliza texto numa largura dada (sem contar bordas)
-function centralizar(txt, largura) {
-    const sobra = largura - txt.length;
-    if (sobra <= 0) return txt.slice(0, largura);
-    const esq = Math.floor(sobra / 2);
-    const dir = sobra - esq;
-    return " ".repeat(esq) + txt + " ".repeat(dir);
-}
-
-function truncar(txt, max) {
-    return txt.length <= max ? txt : txt.slice(0, max - 1) + "…";
-}
-
-function gerarNotaFiscal() {
-    const t = calcTotais();
-    const data = dataNota();
-    const numero = estado.numeroNota || "----";
-    const cliente = (estado.cliente || "").trim();
-
-    const W = 62;
-    const COL_NOME = 28, COL_QTD = 6, COL_UNIT = 8, COL_SUB = 10;
-
-    const center = (txt) => centralizar(txt, W);
-
-    // "  PRODUTO ... QTD ... UNIT. ... SUBTOTAL"
-    const itemFmt = (nome, qtd, unit, sub) =>
-        "  " +
-        nome.padEnd(COL_NOME, " ") + "  " +
-        String(qtd).padStart(COL_QTD, " ") + "  " +
-        unit.padStart(COL_UNIT, " ") + "  " +
-        sub.padStart(COL_SUB, " ");
-
-    // Label à direita, valor numa coluna fixa de 12 chars no final
-    const linhaTotal = (label, valor) => {
-        const valStr = valor.padStart(12);
-        const lblStr = label.padStart(W - 12);
-        return lblStr + valStr;
-    };
-
-    const totalItens = estado.itens.length;
-    const totalUnidades = estado.itens.reduce((s, it) => s + it.quantidade, 0);
-
-    const out = [];
-    out.push("```");
-
-    // ===== CABEÇALHO =====
-    out.push(center("ROCKEFELLER PRODUTOS AGROPECUÁRIOS S.A."));
-    out.push(center("Flatneck Station · New Hanover · Westfox"));
-    out.push(center("─".repeat(46)));
-    out.push("");
-    out.push(center(`NOTA DE ORÇAMENTO  Nº ${numero}`));
-    out.push(center(`${data.texto}  —  ${data.hh}:${data.mm}`));
-    out.push("");
-
-    // ===== CLIENTE =====
-    if (cliente) {
-        out.push(`  Cliente:  ${truncar(cliente, W - 12)}`);
-        out.push("");
-    }
-
-    // ===== ITENS =====
-    if (estado.itens.length === 0) {
-        out.push(center("( Nenhum item lançado )"));
-        out.push("```");
-        return out.join("\n");
-    }
-
-    out.push(itemFmt("PRODUTO", "QTD", "UNIT.", "SUBTOTAL"));
-    out.push("  " + "─".repeat(W - 4));
-
-    for (const it of estado.itens) {
-        const nome = truncar(it.produtoId, COL_NOME);
-        const sub = it.precoUnit * it.quantidade;
-        out.push(itemFmt(nome, it.quantidade, fmt(it.precoUnit), fmt(sub)));
-    }
-
-    out.push("  " + "─".repeat(W - 4));
-    out.push(center(`Itens: ${totalItens}  ·  Unidades: ${totalUnidades}`));
-    out.push("");
-
-    // ===== TOTAIS =====
-    out.push(linhaTotal("SUBTOTAL:", fmt(t.subtotal)));
-    if (t.descAplicado > 0) {
-        const valorDesc = t.subtotal - t.total;
-        out.push(linhaTotal(`DESCONTO (${t.descAplicado.toFixed(2)}%):`, "-" + fmt(valorDesc)));
-    }
-    out.push(" ".repeat(W - 30) + "─".repeat(30));
-    out.push(linhaTotal("TOTAL A PAGAR:", fmt(t.total)));
-    out.push("");
-    out.push("");
-
-    // ===== OBSERVAÇÕES =====
-    const anot = (estado.anotacoes || "").trim();
-    if (anot) {
-        out.push("  Observações:");
-        // Quebra anotações em linhas de até W-4 chars
-        const palavras = anot.split(/\s+/);
-        let linha = "";
-        const linhas = [];
-        const maxLen = W - 4;
-        for (const w of palavras) {
-            if ((linha + " " + w).trim().length > maxLen) {
-                if (linha) linhas.push(linha);
-                linha = w;
-            } else {
-                linha = (linha + " " + w).trim();
-            }
-        }
-        if (linha) linhas.push(linha);
-        for (const l of linhas) out.push("    " + l);
-        out.push("");
-    }
-
-    // ===== ASSINATURAS =====
-    out.push("  Atendido por: ____________________________");
-    out.push("  Assinatura:   ____________________________");
-    out.push("");
-    out.push(center("✦  Tradição · Trabalho · Visão · Legado  ✦"));
-    out.push(center("Rockefeller Produtos Agropecuários S.A."));
-    out.push("```");
-
-    return out.join("\n");
-}
-
 // ============ INIT ============
 function init() {
-    // Carrega pedido vindo de URL (sobrepoe o estado salvo se houver hash)
     carregarDeUrl();
 
     inicializarCombobox();
@@ -886,12 +594,10 @@ function init() {
 
     $("add-btn").addEventListener("click", adicionarItem);
 
-    // Enter na qtd adiciona
     $("qtd-input").addEventListener("keydown", (e) => {
         if (e.key === "Enter") { e.preventDefault(); adicionarItem(); }
     });
 
-    // Quantidade rápida
     document.querySelectorAll(".chip-qtd").forEach(btn => {
         btn.addEventListener("click", () => {
             const incremento = parseInt(btn.dataset.add, 10);
@@ -901,22 +607,19 @@ function init() {
         });
     });
 
-    // Recentes (delegação)
     $("recentes-chips").addEventListener("click", (e) => {
         const btn = e.target.closest("[data-recente-idx]");
         if (!btn) return;
         selecionarProduto(parseInt(btn.dataset.recenteIdx, 10));
     });
 
-    // Lista de itens (delegação: input number + range + remover)
     const lista = $("itens-lista");
     lista.addEventListener("input", (e) => {
         const t = e.target;
         const acao = t.dataset.acao;
         const idx = parseInt(t.dataset.idx, 10);
         if (acao === "qtd") atualizarQtd(idx, t.value);
-        else if (acao === "preco") atualizarPreco(idx, t.value);
-        else if (acao === "preco-slider") atualizarPreco(idx, t.value);
+        else if (acao === "preco" || acao === "preco-slider") atualizarPreco(idx, t.value);
     });
     lista.addEventListener("click", (e) => {
         const t = e.target.closest("[data-acao='remover']");
@@ -924,7 +627,6 @@ function init() {
         removerItem(parseInt(t.dataset.idx, 10));
     });
 
-    // Desconto
     $("desconto-input").addEventListener("input", (e) => {
         const v = parseFloat(e.target.value);
         estado.descontoPercent = isNaN(v) ? 0 : v;
@@ -936,7 +638,6 @@ function init() {
     $("limpar-btn").addEventListener("click", limparPedido);
     $("link-btn").addEventListener("click", copiarLink);
 
-    // Cliente
     const cliInput = $("cliente-input");
     cliInput.value = estado.cliente || "";
     cliInput.addEventListener("input", (e) => {
@@ -944,7 +645,6 @@ function init() {
         salvar();
     });
 
-    // Anotações
     const anotInput = $("anotacoes-input");
     anotInput.value = estado.anotacoes || "";
     anotInput.addEventListener("input", (e) => {
@@ -952,7 +652,6 @@ function init() {
         salvar();
     });
 
-    // Histórico (delegação: load + delete)
     $("historico-lista").addEventListener("click", (e) => {
         const del = e.target.closest("[data-hist-del]");
         if (del) {
@@ -965,7 +664,6 @@ function init() {
         }
     });
 
-    // Atalho global "/" para focar busca
     document.addEventListener("keydown", (e) => {
         if (e.key !== "/") return;
         const ae = document.activeElement;

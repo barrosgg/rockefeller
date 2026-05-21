@@ -1379,3 +1379,385 @@ input[type="range"].preco-slider:focus-visible::-webkit-slider-thumb {
     .qtd-rapida { gap: 4px; }
     .chip-qtd { min-width: 0; flex: 1 1 30%; }
 }
+
+/* ============ PÁGINA DE VISUALIZAÇÃO (pedido.html) ============ */
+
+.view-container {
+    max-width: 640px;
+    margin: 32px auto;
+    padding: 0 16px;
+}
+
+.view-nota {
+    background: var(--page);
+    background-image:
+        radial-gradient(ellipse at 50% 0%, rgba(184,146,58,0.10) 0%, transparent 50%),
+        radial-gradient(circle at 20% 60%, rgba(122,94,31,0.08) 0%, transparent 35%);
+    padding: 36px 32px 28px;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 0 0 1px var(--ouro),
+        inset 0 0 0 5px var(--page),
+        inset 0 0 0 6px var(--ouro-medio),
+        0 18px 50px rgba(74,53,32,0.55),
+        inset 0 0 60px rgba(184,146,58,0.10);
+    color: var(--tinta);
+    position: relative;
+}
+
+.view-loading {
+    text-align: center;
+    padding: 30px 12px;
+    color: var(--tinta-fade);
+    font-style: italic;
+}
+
+.view-vazio {
+    text-align: center;
+    padding: 24px 12px;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--tinta);
+}
+
+.view-vazio a {
+    color: var(--ouro-escuro);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+/* === Cabeçalho da nota === */
+.nt-header {
+    text-align: center;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--ouro);
+    margin-bottom: 18px;
+}
+
+.nt-crest {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 8px;
+    color: var(--ouro);
+    filter: drop-shadow(0 1px 2px rgba(94,71,22,0.4));
+}
+.nt-crest svg { width: 100%; height: 100%; display: block; }
+
+.nt-header h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, #b8923a 0%, #8b6f23 50%, #5a4313 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--ouro);
+    margin: 0 0 4px;
+}
+
+.nt-razao {
+    font-family: 'Cinzel', serif;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: var(--ouro-escuro);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.nt-endereco {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--tinta-fade);
+    margin: 4px 0 0;
+}
+
+/* === Meta (Nº, data, cliente) === */
+.nt-meta {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.nt-numero {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 2.5px;
+    color: var(--ouro-prof);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.nt-data {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--tinta-soft);
+    margin: 4px 0 10px;
+}
+
+.nt-cliente {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--tinta);
+    margin: 8px 0 0;
+    padding: 6px 12px;
+    background: rgba(184,146,58,0.10);
+    border-left: 3px solid var(--ouro);
+    text-align: left;
+    display: inline-block;
+}
+
+.nt-cliente .lbl {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ouro-escuro);
+    margin-right: 6px;
+}
+
+/* === Tabela de itens === */
+.nt-itens {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+}
+
+.nt-itens thead th {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ouro-escuro);
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--ouro);
+    text-align: left;
+}
+
+.nt-itens thead th.nt-qtd,
+.nt-itens thead th.nt-unit,
+.nt-itens thead th.nt-sub { text-align: right; }
+
+.nt-itens tbody td {
+    padding: 6px 4px;
+    border-bottom: 1px dashed rgba(122,94,31,0.25);
+    color: var(--tinta);
+}
+
+.nt-itens tbody td.nt-nome {
+    font-weight: 600;
+}
+
+.nt-itens tbody td.nt-qtd,
+.nt-itens tbody td.nt-unit,
+.nt-itens tbody td.nt-sub {
+    text-align: right;
+    font-family: 'Special Elite', monospace;
+    font-size: 13px;
+}
+
+.nt-itens tbody td.nt-sub {
+    font-weight: 700;
+    color: var(--ouro-prof);
+}
+
+.nt-itens tfoot td {
+    padding: 4px 4px;
+    font-family: 'Cinzel', serif;
+    text-align: right;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.nt-itens tfoot tr.nt-tot-sub td:first-child,
+.nt-itens tfoot tr.nt-tot-desc td:first-child {
+    font-size: 11px;
+    color: var(--tinta-soft);
+}
+
+.nt-itens tfoot tr.nt-tot-sub td:last-child,
+.nt-itens tfoot tr.nt-tot-desc td:last-child {
+    font-size: 14px;
+    color: var(--tinta);
+    font-weight: 700;
+    font-family: 'Special Elite', monospace;
+}
+
+.nt-itens tfoot tr.nt-tot-final td {
+    border-top: 2px solid var(--ouro);
+    padding-top: 10px;
+    padding-bottom: 4px;
+}
+
+.nt-itens tfoot tr.nt-tot-final td:first-child {
+    font-size: 13px;
+    letter-spacing: 3px;
+    font-weight: 900;
+    color: var(--ouro-escuro);
+}
+
+.nt-itens tfoot tr.nt-tot-final td:last-child {
+    font-size: 20px;
+    font-weight: 900;
+    background: linear-gradient(180deg, var(--ouro-vivo), var(--ouro-escuro));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--ouro-escuro);
+}
+
+.nt-resumo {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--tinta-fade);
+    margin: 0 0 16px;
+}
+
+/* === Observações === */
+.nt-observacoes {
+    background: rgba(184,146,58,0.08);
+    border: 1px dashed var(--ouro-medio);
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    border-radius: 1px;
+}
+
+.nt-observacoes h4 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ouro-escuro);
+    margin: 0 0 4px;
+}
+
+.nt-observacoes p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--tinta);
+    margin: 0;
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+/* === Assinaturas === */
+.nt-assinaturas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.nt-sig {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.nt-sig-label {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ouro-escuro);
+    margin-bottom: 18px;
+}
+
+.nt-sig-line {
+    height: 1px;
+    background: var(--tinta-soft);
+}
+
+/* === Rodapé da nota === */
+.nt-footer {
+    text-align: center;
+    padding-top: 14px;
+    border-top: 1px solid var(--ouro);
+}
+
+.nt-virtudes {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ouro);
+    margin: 0 0 4px;
+}
+
+.nt-razao-foot {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 12px;
+    color: var(--tinta-fade);
+    margin: 0;
+}
+
+/* === Ações abaixo da nota === */
+.view-actions {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.view-actions .copy-feedback {
+    width: 100%;
+    text-align: center;
+    margin-top: 6px;
+    color: var(--ouro-claro);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    min-height: 18px;
+}
+
+.view-footer-link {
+    text-align: center;
+    margin-top: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.view-footer-link a {
+    color: var(--ouro-vivo);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--ouro-medio);
+}
+
+.view-footer-link a:hover {
+    color: var(--ouro-claro);
+    border-bottom-color: var(--ouro-vivo);
+}
+
+/* Mobile view */
+@media (max-width: 520px) {
+    .view-container { margin: 16px auto; padding: 0 10px; }
+    .view-nota { padding: 24px 18px 22px; }
+    .nt-itens { font-size: 13px; }
+    .nt-itens tbody td.nt-qtd,
+    .nt-itens tbody td.nt-unit,
+    .nt-itens tbody td.nt-sub { font-size: 12px; }
+    .nt-assinaturas { grid-template-columns: 1fr; }
+    .view-actions .btn { width: 100%; }
+}
+
+/* Impressão */
+@media print {
+    body { background: white !important; padding: 0; }
+    .view-actions, .view-footer-link, .skip-link { display: none !important; }
+    .view-nota {
+        box-shadow: none !important;
+        border: 1px solid #888;
+    }
+}

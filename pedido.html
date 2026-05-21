@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d0703">
+    <title>Nota de Orçamento — Fazenda Rockefeller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="view-mode">
+    <a class="skip-link" href="#nota">Pular para a nota</a>
+
+    <main class="view-container" id="nota">
+        <article class="view-nota" id="nota-content" aria-live="polite">
+            <!-- preenchido pelo pedido.js -->
+            <div class="view-loading">Carregando orçamento…</div>
+        </article>
+
+        <div class="view-actions">
+            <button type="button" id="copy-discord" class="btn btn-primary">📋 Copiar para Discord</button>
+            <button type="button" id="open-editor" class="btn btn-secondary">🛒 Abrir na Calculadora</button>
+            <div class="copy-feedback" id="copy-feedback" aria-live="assertive"></div>
+        </div>
+
+        <p class="view-footer-link">
+            <a href="index.html">← Voltar à calculadora</a>
+        </p>
+    </main>
+
+    <script src="produtos.js"></script>
+    <script src="nota.js"></script>
+    <script src="pedido.js"></script>
+</body>
+</html>
