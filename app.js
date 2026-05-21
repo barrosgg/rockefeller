@@ -410,10 +410,7 @@ function render() {
             const warnClass = it._aviso ? "preco-warning" : "";
             return `
                 <div class="item-row" role="group" aria-label="${escapeHtml(p.nome)}">
-                    <div class="nome">
-                        ${escapeHtml(p.nome)}
-                        <small>min ${fmt(p.min)} · max ${fmt(p.max)}</small>
-                    </div>
+                    <div class="nome">${escapeHtml(p.nome)}</div>
                     <button class="btn-remover" data-acao="remover" data-idx="${idx}"
                             title="Remover ${escapeHtml(p.nome)}" aria-label="Remover ${escapeHtml(p.nome)}">✕</button>
 
@@ -425,22 +422,18 @@ function render() {
                         </div>
                         <div class="col-preco">
                             <label for="preco-${idx}">Preço unitário</label>
-                            <div class="preco-com-slider">
-                                <div class="preco-inputs">
-                                    <input type="number" id="preco-${idx}" min="${p.min}" max="${p.max}" step="0.01"
-                                        value="${it.precoUnit.toFixed(2)}" inputmode="decimal"
-                                        class="${warnClass}"
-                                        data-acao="preco" data-idx="${idx}">
-                                    <input type="range" class="preco-slider" min="${p.min}" max="${p.max}" step="0.01"
-                                        value="${it.precoUnit.toFixed(2)}"
-                                        aria-label="Ajustar preço de ${escapeHtml(p.nome)}"
-                                        data-acao="preco-slider" data-idx="${idx}">
-                                </div>
-                                <div class="preco-meta">
-                                    <span class="min">min ${fmt(p.min)}</span>
-                                    <span class="max">máx ${fmt(p.max)}</span>
-                                </div>
-                            </div>
+                            <input type="number" id="preco-${idx}" min="${p.min}" max="${p.max}" step="0.01"
+                                value="${it.precoUnit.toFixed(2)}" inputmode="decimal"
+                                class="${warnClass}"
+                                data-acao="preco" data-idx="${idx}">
+                        </div>
+                        <div class="col-slider">
+                            <span class="preco-meta-min">${fmt(p.min)}</span>
+                            <input type="range" class="preco-slider" min="${p.min}" max="${p.max}" step="0.01"
+                                value="${it.precoUnit.toFixed(2)}"
+                                aria-label="Ajustar preço de ${escapeHtml(p.nome)}"
+                                data-acao="preco-slider" data-idx="${idx}">
+                            <span class="preco-meta-max">${fmt(p.max)}</span>
                         </div>
                     </div>
 
