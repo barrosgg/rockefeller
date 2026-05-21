@@ -123,6 +123,11 @@
                         <kbd>Esc</kbd> fecha
                     </p>
                 </section>
+
+                <section class="kits-section" aria-labelledby="kits-title">
+                    <h3 id="kits-title">Kits Rápidos</h3>
+                    <div class="kits-grid" id="kits-grid"></div>
+                </section>
             </div>
 
             <div class="spine" aria-hidden="true"></div>
@@ -142,6 +147,7 @@
 
                 <section class="totais-section" id="totais-section" aria-labelledby="totais-title">
                     <h3 id="totais-title" class="visually-hidden">Totais</h3>
+                    <div class="categorias-info" id="categorias-info"></div>
                     <div class="linha-total">
                         <span class="label">Subtotal:</span>
                         <span class="valor" id="subtotal-val">$0.00</span>
@@ -160,13 +166,31 @@
                         <span class="label">TOTAL:</span>
                         <span class="valor" id="total-val" aria-live="polite">$0.00</span>
                     </div>
+                    <div class="margem-info" id="margem-info"></div>
                     <div class="aviso" id="aviso-desconto" aria-live="polite"></div>
+                </section>
+
+                <section class="anotacoes-section" aria-labelledby="anotacoes-title">
+                    <h3 id="anotacoes-title" class="visually-hidden">Anotações</h3>
+                    <label class="anotacoes-label" for="anotacoes-input">
+                        <span>Observações</span>
+                        <small>(aparecem na nota final, se preenchidas)</small>
+                    </label>
+                    <textarea id="anotacoes-input" rows="2" maxlength="280"
+                        placeholder="Ex: Entregar antes de domingo · Pagamento à vista · Sem ônibus"></textarea>
                 </section>
 
                 <section class="acoes-section" aria-label="Ações do pedido">
                     <button id="copiar-btn" class="btn btn-primary">📋 Copiar para Discord</button>
-                    <button id="limpar-btn" class="btn btn-secondary">🗑 Limpar Pedido</button>
+                    <button id="link-btn" class="btn btn-secondary">🔗 Copiar Link</button>
+                    <button id="limpar-btn" class="btn btn-secondary">🗑 Limpar</button>
                     <div class="copy-feedback" id="copy-feedback" aria-live="assertive"></div>
+                </section>
+
+                <section class="historico-section" id="historico-section" aria-labelledby="historico-title">
+                    <h3 id="historico-title">📜 Histórico de Orçamentos</h3>
+                    <div class="historico-vazio" id="historico-vazio">Nenhum orçamento salvo ainda. O histórico guarda as últimas 20 notas copiadas.</div>
+                    <ul class="historico-lista" id="historico-lista" hidden></ul>
                 </section>
             </div>
         </main>

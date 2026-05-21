@@ -99,10 +99,40 @@ const estado = carregar() || {
     recentes: [],
     numeroNota: null,
     cliente: "",
+    anotacoes: "",
 };
 if (!Array.isArray(estado.recentes)) estado.recentes = [];
 if (typeof estado.numeroNota === "undefined") estado.numeroNota = null;
 if (typeof estado.cliente !== "string") estado.cliente = "";
+if (typeof estado.anotacoes !== "string") estado.anotacoes = "";
+
+// ============ KITS ============
+const KITS = [
+    { id: "padaria",     nome: "Padaria",     emoji: "🥖", itens: [["Trigo", 50], ["Açúcar", 20], ["Leite", 20], ["Ovo", 30], ["Manteiga", 10]] },
+    { id: "acougue",     nome: "Açougue",     emoji: "🥩", itens: [["Carne de Vaca", 30], ["Carne de Porco", 20], ["Ovo", 10]] },
+    { id: "laticinios",  nome: "Laticínios",  emoji: "🧀", itens: [["Leite", 30], ["Queijo", 15], ["Coalhada", 10], ["Manteiga", 8], ["Ricota", 8], ["Requeijão", 5]] },
+    { id: "pomar",       nome: "Pomar",       emoji: "🍎", itens: [["Maçã", 30], ["Banana", 30], ["Laranja", 30], ["Pêssego", 20], ["Uva", 20], ["Ameixa", 20]] },
+    { id: "lavoura",     nome: "Lavoura",     emoji: "🌾", itens: [["Saco de Trigo", 5], ["Saco de Milho", 5], ["Saco de Cana-de-açúcar", 5], ["Fertilizante", 30]] },
+    { id: "especiarias", nome: "Especiarias", emoji: "🌿", itens: [["Café", 20], ["Cacau", 15], ["Hortelã", 10], ["Tomilho", 10], ["Orégano", 10]] },
+];
+
+// ============ HISTÓRICO ============
+const HISTORICO_KEY = "fazenda-rockefeller-historico-v1";
+
+function carregarHistorico() {
+    try {
+        const raw = localStorage.getItem(HISTORICO_KEY);
+        if (!raw) return [];
+        const data = JSON.parse(raw);
+        return Array.isArray(data) ? data : [];
+    } catch { return []; }
+}
+
+function salvarHistorico() {
+    try { localStorage.setItem(HISTORICO_KEY, JSON.stringify(historico)); } catch {}
+}
+
+let historico = carregarHistorico();
 
 function carregar() {
     try {
@@ -397,7 +427,19 @@ function calcTotais() {
     }
     if (descAplicado < 0) descAplicado = 0;
     const total = subtotal * (1 - descAplicado / 100);
-    return { subtotal, minTotal, descMaxPct, descAplicado, descClampado, total };
+    const margem = total - minTotal;
+    const margemPct = minTotal > 0 ? (margem / minTotal) * 100 : 0;
+    return { subtotal, minTotal, descMaxPct, descAplicado, descClampado, total, margem, margemPct };
+}
+
+function subtotaisPorCategoria() {
+    const grupos = {};
+    for (const it of estado.itens) {
+        const p = PRODUTOS[indiceProduto(it.produtoId)];
+        const sub = it.precoUnit * it.quantidade;
+        grupos[p.categoria] = (grupos[p.categoria] || 0) + sub;
+    }
+    return grupos;
 }
 
 function render() {
@@ -460,7 +502,31 @@ function render() {
         aviso.textContent = "";
     }
 
+    // Subtotais por categoria
+    const catInfo = $("categorias-info");
+    if (estado.itens.length >= 2) {
+        const grupos = subtotaisPorCategoria();
+        const partes = Object.entries(grupos)
+            .sort((a, b) => b[1] - a[1])
+            .map(([nome, val]) =>
+                `<span class="cat"><span class="cat-nome">${escapeHtml(nome.split(",")[0].split("&")[0].trim())}:</span><span class="cat-val">${fmt(val)}</span></span>`
+            );
+        catInfo.innerHTML = partes.join(" · ");
+    } else {
+        catInfo.innerHTML = "";
+    }
+
+    // Margem do contrato (lucro acima do mínimo)
+    const margemInfo = $("margem-info");
+    if (estado.itens.length > 0 && t.minTotal > 0) {
+        const sinal = t.margem >= 0 ? "+" : "";
+        margemInfo.innerHTML = `Margem do contrato: <span class="pct">${sinal}${fmt(t.margem)} (${t.margemPct.toFixed(1)}% acima do mínimo)</span>`;
+    } else {
+        margemInfo.innerHTML = "";
+    }
+
     renderRecentes();
+    renderHistorico();
     atualizarFloatingSummary(t);
 }
 
@@ -499,9 +565,10 @@ async function copiarParaDiscord() {
     const texto = gerarTextoDiscord();
     const feedback = $("copy-feedback");
     feedback.innerHTML = "";
+    adicionarAoHistorico();
     try {
         await navigator.clipboard.writeText(texto);
-        feedback.textContent = "✓ Orçamento copiado! Cole no Discord (Ctrl+V).";
+        feedback.textContent = "✓ Orçamento copiado e salvo no histórico! Cole no Discord (Ctrl+V).";
     } catch {
         const ta = document.createElement("textarea");
         ta.value = texto;
@@ -525,16 +592,184 @@ async function copiarParaDiscord() {
 }
 
 function limparPedido() {
-    if (estado.itens.length === 0 && !estado.cliente) return;
+    if (estado.itens.length === 0 && !estado.cliente && !estado.anotacoes) return;
     if (!confirm("Tem certeza que deseja limpar todo o pedido, forasteiro?")) return;
     estado.itens = [];
     estado.descontoPercent = 0;
     estado.numeroNota = null;
     estado.cliente = "";
+    estado.anotacoes = "";
     const cliInput = $("cliente-input");
     if (cliInput) cliInput.value = "";
+    const anotInput = $("anotacoes-input");
+    if (anotInput) anotInput.value = "";
     salvar();
     render();
+}
+
+// ============ KITS ============
+function renderKits() {
+    const grid = $("kits-grid");
+    grid.innerHTML = KITS.map((k, i) => `
+        <button type="button" class="kit-chip" data-kit-idx="${i}"
+                title="${k.itens.map(([n, q]) => n + ' ×' + q).join(', ')}">
+            <span class="emoji" aria-hidden="true">${k.emoji}</span>
+            <span>${escapeHtml(k.nome)}</span>
+        </button>
+    `).join("");
+}
+
+function aplicarKit(idx) {
+    const kit = KITS[idx];
+    if (!kit) return;
+    for (const [nome, qtd] of kit.itens) {
+        const pIdx = indiceProduto(nome);
+        if (pIdx < 0) continue;
+        const p = PRODUTOS[pIdx];
+        const existente = estado.itens.find(it => it.produtoId === nome);
+        if (existente) {
+            existente.quantidade += qtd;
+        } else {
+            estado.itens.push({ produtoId: nome, quantidade: qtd, precoUnit: p.max });
+        }
+        registrarRecente(nome);
+    }
+    if (!estado.numeroNota) estado.numeroNota = gerarNumeroNota();
+    salvar();
+    render();
+}
+
+// ============ HISTÓRICO ============
+function adicionarAoHistorico() {
+    if (estado.itens.length === 0) return;
+    const t = calcTotais();
+    const entry = {
+        numero: estado.numeroNota,
+        cliente: estado.cliente,
+        anotacoes: estado.anotacoes,
+        itens: estado.itens.map(it => ({ ...it })),
+        descontoPercent: estado.descontoPercent,
+        total: t.total,
+        salvoEm: Date.now(),
+    };
+    // Atualiza se mesmo numero ja existe; senao adiciona ao topo
+    historico = [entry, ...historico.filter(h => h.numero !== entry.numero)].slice(0, 20);
+    salvarHistorico();
+    renderHistorico();
+}
+
+function carregarDoHistorico(idx) {
+    const h = historico[idx];
+    if (!h) return;
+    if (estado.itens.length > 0 && !confirm("Carregar esta nota substitui o pedido atual. Continuar?")) return;
+    estado.itens = h.itens.map(it => ({ ...it }));
+    estado.descontoPercent = h.descontoPercent || 0;
+    estado.cliente = h.cliente || "";
+    estado.anotacoes = h.anotacoes || "";
+    estado.numeroNota = h.numero;
+    $("cliente-input").value = estado.cliente;
+    $("anotacoes-input").value = estado.anotacoes;
+    salvar();
+    render();
+    // Scroll suave pro topo da lista de itens
+    document.getElementById("itens-lista")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function removerDoHistorico(idx) {
+    if (!confirm("Remover este orçamento do histórico?")) return;
+    historico.splice(idx, 1);
+    salvarHistorico();
+    renderHistorico();
+}
+
+function renderHistorico() {
+    const lista = $("historico-lista");
+    const vazio = $("historico-vazio");
+    if (historico.length === 0) {
+        vazio.hidden = false;
+        lista.hidden = true;
+        lista.innerHTML = "";
+        return;
+    }
+    vazio.hidden = true;
+    lista.hidden = false;
+    lista.innerHTML = historico.map((h, i) => {
+        const d = new Date(h.salvoEm);
+        const data = `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
+        const cli = (h.cliente && h.cliente.trim()) ? escapeHtml(h.cliente) : "<em>sem cliente</em>";
+        return `
+            <li class="historico-row">
+                <button class="historico-load" data-hist-idx="${i}" type="button"
+                        title="Carregar este pedido (substitui o atual)">
+                    <span class="h-num">Nº ${escapeHtml(String(h.numero || "----"))}</span>
+                    <span class="h-cli">${cli}</span>
+                    <span class="h-data">${data}</span>
+                    <span class="h-total">${fmt(h.total)}</span>
+                </button>
+                <button class="historico-del" data-hist-del="${i}" type="button"
+                        aria-label="Remover do histórico">✕</button>
+            </li>
+        `;
+    }).join("");
+}
+
+// ============ URL SHARE ============
+function gerarUrlPedido() {
+    const compact = {
+        i: estado.itens.map(it => [it.produtoId, it.quantidade, Math.round(it.precoUnit * 100) / 100]),
+        d: estado.descontoPercent || 0,
+        c: estado.cliente || "",
+        a: estado.anotacoes || "",
+        n: estado.numeroNota || "",
+    };
+    const json = JSON.stringify(compact);
+    const b64 = btoa(unescape(encodeURIComponent(json)));
+    return `${location.origin}${location.pathname}#p=${b64}`;
+}
+
+function carregarDeUrl() {
+    if (!location.hash.startsWith("#p=")) return false;
+    try {
+        const b64 = location.hash.slice(3);
+        const json = decodeURIComponent(escape(atob(b64)));
+        const data = JSON.parse(json);
+        if (!Array.isArray(data.i)) return false;
+        if (estado.itens.length > 0 &&
+            !confirm("Há um pedido neste link. Carregar substitui o pedido atual. Continuar?")) {
+            history.replaceState(null, "", location.pathname);
+            return false;
+        }
+        estado.itens = data.i.map(([p, q, u]) => ({ produtoId: p, quantidade: q, precoUnit: u }));
+        estado.descontoPercent = data.d || 0;
+        estado.cliente = data.c || "";
+        estado.anotacoes = data.a || "";
+        estado.numeroNota = data.n || gerarNumeroNota();
+        history.replaceState(null, "", location.pathname);
+        salvar();
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+async function copiarLink() {
+    if (estado.itens.length === 0) {
+        const feedback = $("copy-feedback");
+        feedback.textContent = "Adicione itens antes de gerar o link.";
+        setTimeout(() => { feedback.textContent = ""; }, 3500);
+        return;
+    }
+    const url = gerarUrlPedido();
+    const feedback = $("copy-feedback");
+    try {
+        await navigator.clipboard.writeText(url);
+        feedback.textContent = "✓ Link copiado! Cole no Discord — o destinatário verá o pedido montado.";
+    } catch {
+        feedback.textContent = `Link: ${url}`;
+    }
+    setTimeout(() => {
+        if (feedback.children.length === 0) feedback.textContent = "";
+    }, 5000);
 }
 
 // ============ NOTA FISCAL ============
@@ -649,6 +884,28 @@ function gerarNotaFiscal() {
     out.push("");
     out.push("");
 
+    // ===== OBSERVAÇÕES =====
+    const anot = (estado.anotacoes || "").trim();
+    if (anot) {
+        out.push("  Observações:");
+        // Quebra anotações em linhas de até W-4 chars
+        const palavras = anot.split(/\s+/);
+        let linha = "";
+        const linhas = [];
+        const maxLen = W - 4;
+        for (const w of palavras) {
+            if ((linha + " " + w).trim().length > maxLen) {
+                if (linha) linhas.push(linha);
+                linha = w;
+            } else {
+                linha = (linha + " " + w).trim();
+            }
+        }
+        if (linha) linhas.push(linha);
+        for (const l of linhas) out.push("    " + l);
+        out.push("");
+    }
+
     // ===== ASSINATURAS =====
     out.push("  Atendido por: ____________________________");
     out.push("  Assinatura:   ____________________________");
@@ -666,8 +923,12 @@ function gerarTextoDiscord() {
 
 // ============ INIT ============
 function init() {
+    // Carrega pedido vindo de URL (sobrepoe o estado salvo se houver hash)
+    carregarDeUrl();
+
     inicializarCombobox();
     inicializarFloatingSummary();
+    renderKits();
 
     $("add-btn").addEventListener("click", adicionarItem);
 
@@ -719,6 +980,7 @@ function init() {
 
     $("copiar-btn").addEventListener("click", copiarParaDiscord);
     $("limpar-btn").addEventListener("click", limparPedido);
+    $("link-btn").addEventListener("click", copiarLink);
 
     // Cliente
     const cliInput = $("cliente-input");
@@ -726,6 +988,34 @@ function init() {
     cliInput.addEventListener("input", (e) => {
         estado.cliente = e.target.value;
         salvar();
+    });
+
+    // Anotações
+    const anotInput = $("anotacoes-input");
+    anotInput.value = estado.anotacoes || "";
+    anotInput.addEventListener("input", (e) => {
+        estado.anotacoes = e.target.value;
+        salvar();
+    });
+
+    // Kits (delegação)
+    $("kits-grid").addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-kit-idx]");
+        if (!btn) return;
+        aplicarKit(parseInt(btn.dataset.kitIdx, 10));
+    });
+
+    // Histórico (delegação: load + delete)
+    $("historico-lista").addEventListener("click", (e) => {
+        const del = e.target.closest("[data-hist-del]");
+        if (del) {
+            removerDoHistorico(parseInt(del.dataset.histDel, 10));
+            return;
+        }
+        const load = e.target.closest("[data-hist-idx]");
+        if (load) {
+            carregarDoHistorico(parseInt(load.dataset.histIdx, 10));
+        }
     });
 
     // Atalho global "/" para focar busca
