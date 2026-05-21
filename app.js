@@ -97,8 +97,10 @@ const estado = carregar() || {
     itens: [],
     descontoPercent: 0,
     recentes: [],
+    numeroNota: null,
 };
 if (!Array.isArray(estado.recentes)) estado.recentes = [];
+if (typeof estado.numeroNota === "undefined") estado.numeroNota = null;
 
 function carregar() {
     try {
@@ -333,6 +335,9 @@ function adicionarItem() {
             precoUnit: p.max,
         });
     }
+    if (!estado.numeroNota) {
+        estado.numeroNota = gerarNumeroNota();
+    }
     registrarRecente(p.nome);
 
     $("qtd-input").value = 1;
@@ -499,45 +504,6 @@ function atualizarFloatingSummary(t) {
     }
 }
 
-// ============ DISCORD EXPORT ============
-function gerarTextoDiscord() {
-    const t = calcTotais();
-    const hoje = new Date();
-    const data = hoje.toLocaleDateString('pt-BR');
-    const hora = hoje.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-
-    if (estado.itens.length === 0) {
-        return "```\n📜 Pedido vazio — Fazenda Rockefeller\n```";
-    }
-
-    const maxNome = Math.max(...estado.itens.map(it => it.produtoId.length));
-
-    const linhas = estado.itens.map(it => {
-        const nome = it.produtoId.padEnd(maxNome, " ");
-        const qtd = String(it.quantidade).padStart(5, " ");
-        const preco = fmt(it.precoUnit).padStart(7, " ");
-        const sub = fmt(it.precoUnit * it.quantidade).padStart(10, " ");
-        return `  ${nome}  x ${qtd}  @ ${preco}  = ${sub}`;
-    });
-
-    const linha = "═".repeat(Math.max(50, maxNome + 34));
-
-    let out = "```";
-    out += "\n📜 PEDIDO — FAMÍLIA ROCKEFELLER";
-    out += `\n${data} · ${hora}`;
-    out += `\n${linha}`;
-    out += `\n${linhas.join("\n")}`;
-    out += `\n${linha}`;
-    out += `\n  Subtotal: ${fmt(t.subtotal).padStart(linha.length - 12)}`;
-    if (t.descAplicado > 0) {
-        const valorDesc = t.subtotal - t.total;
-        out += `\n  Desconto (${t.descAplicado.toFixed(2)}%): ${("- " + fmt(valorDesc)).padStart(linha.length - 16 - t.descAplicado.toFixed(2).length)}`;
-    }
-    out += `\n  TOTAL:    ${fmt(t.total).padStart(linha.length - 12)}`;
-    out += "\n```";
-    return out;
-}
-
 async function copiarParaDiscord() {
     const texto = gerarTextoDiscord();
     const feedback = $("copy-feedback");
@@ -572,8 +538,141 @@ function limparPedido() {
     if (!confirm("Tem certeza que deseja limpar todo o pedido, forasteiro?")) return;
     estado.itens = [];
     estado.descontoPercent = 0;
+    estado.numeroNota = null;
     salvar();
     render();
+}
+
+// ============ NOTA FISCAL ============
+const MESES_PT = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+
+function gerarNumeroNota() {
+    // 4 dígitos pseudo-aleatórios baseados em ms — visualmente "sequencial"
+    const n = (Date.now() % 9000) + 1000;
+    return String(n).padStart(4, "0");
+}
+
+function dataNota() {
+    const h = new Date();
+    const dia = h.getDate();
+    const mes = MESES_PT[h.getMonth()];
+    const hh = String(h.getHours()).padStart(2, "0");
+    const mm = String(h.getMinutes()).padStart(2, "0");
+    return { dia, mes, hh, mm, texto: `${String(dia).padStart(2,"0")} de ${mes} de 1900` };
+}
+
+// Centraliza texto numa largura dada (sem contar bordas)
+function centralizar(txt, largura) {
+    const sobra = largura - txt.length;
+    if (sobra <= 0) return txt.slice(0, largura);
+    const esq = Math.floor(sobra / 2);
+    const dir = sobra - esq;
+    return " ".repeat(esq) + txt + " ".repeat(dir);
+}
+
+function truncar(txt, max) {
+    return txt.length <= max ? txt : txt.slice(0, max - 1) + "…";
+}
+
+function gerarNotaFiscal() {
+    const t = calcTotais();
+    const data = dataNota();
+    const numero = estado.numeroNota || "----";
+
+    // Largura interna da caixa (entre as bordas ║)
+    const W = 60;
+    const top = "╔" + "═".repeat(W) + "╗";
+    const mid = "╠" + "═".repeat(W) + "╣";
+    const bot = "╚" + "═".repeat(W) + "╝";
+    const sep = "╟" + "─".repeat(W) + "╢";
+    const linha = (txt) => "║" + centralizar(txt, W) + "║";
+
+    // Colunas dos itens (totalizando W=60):
+    //  1 espaco + 28 nome + 2 + 6 qtd + 2 + 8 unit + 2 + 10 sub + 1 = 60
+    const COL_NOME = 28, COL_QTD = 6, COL_UNIT = 8, COL_SUB = 10;
+    const itemFmt = (nome, qtd, unit, sub) =>
+        "║ " +
+        nome.padEnd(COL_NOME, " ") + "  " +
+        String(qtd).padStart(COL_QTD, " ") + "  " +
+        unit.padStart(COL_UNIT, " ") + "  " +
+        sub.padStart(COL_SUB, " ") +
+        " ║";
+
+    const totalItens = estado.itens.length;
+    const totalUnidades = estado.itens.reduce((s, it) => s + it.quantidade, 0);
+
+    const out = [];
+
+    // ===== CABEÇALHO =====
+    out.push("```");
+    out.push(top);
+    out.push(linha("★  F A Z E N D A   R O C K E F E L L E R  ★"));
+    out.push(linha("Rockefeller Produtos Agropecuários S.A."));
+    out.push(linha("Flatneck Station · New Hanover · Westfox"));
+    out.push(mid);
+    out.push(linha(`NOTA DE ORÇAMENTO  Nº ${numero}`));
+    out.push(linha(`${data.texto}  —  ${data.hh}:${data.mm}`));
+    out.push(bot);
+    out.push("");
+
+    // ===== TABELA DE ITENS =====
+    if (estado.itens.length === 0) {
+        out.push("╔" + "═".repeat(W) + "╗");
+        out.push(linha("(Nenhum item lançado)"));
+        out.push("╚" + "═".repeat(W) + "╝");
+        out.push("```");
+        return out.join("\n");
+    }
+
+    out.push("╔" + "═".repeat(W) + "╗");
+    out.push(itemFmt("PRODUTO", "QTD", "UNIT.", "SUBTOTAL"));
+    out.push(mid);
+
+    for (const it of estado.itens) {
+        const nome = truncar(it.produtoId, COL_NOME);
+        const sub = it.precoUnit * it.quantidade;
+        out.push(itemFmt(nome, it.quantidade, fmt(it.precoUnit), fmt(sub)));
+    }
+
+    out.push(mid);
+
+    // ===== TOTAIS =====
+    const linhaTotal = (rotulo, valor) => {
+        // Rótulo à direita, valor à direita
+        const espacoTotal = W - 2;
+        const valorStr = valor.padStart(COL_SUB);
+        const rotuloLargura = espacoTotal - valorStr.length - 1;
+        return "║ " + rotulo.padStart(rotuloLargura, " ") + " " + valorStr + " ║";
+    };
+
+    out.push(linhaTotal(`Itens: ${totalItens}  ·  Unidades: ${totalUnidades}`, ""));
+    out.push(sep);
+    out.push(linhaTotal("SUBTOTAL:", fmt(t.subtotal)));
+    if (t.descAplicado > 0) {
+        const valorDesc = t.subtotal - t.total;
+        out.push(linhaTotal(`DESCONTO (${t.descAplicado.toFixed(2)}%):`, "-" + fmt(valorDesc)));
+    }
+    out.push(sep);
+    out.push(linhaTotal("TOTAL A PAGAR:", fmt(t.total)));
+    out.push(bot);
+    out.push("");
+
+    // ===== RODAPÉ =====
+    out.push("  Atendido por: ____________________________");
+    out.push("  Assinatura:   ____________________________");
+    out.push("");
+    out.push("    ✦  Tradição · Trabalho · Visão · Legado  ✦");
+    out.push("       Westfox Trading Co. — Estab. 1899");
+    out.push("```");
+
+    return out.join("\n");
+}
+
+function gerarTextoDiscord() {
+    return gerarNotaFiscal();
 }
 
 // ============ INIT ============
