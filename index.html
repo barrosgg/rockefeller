@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livro de Orçamento da Fazenda Rockefeller</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="book">
+        <div class="page">
+            <header class="header">
+                <div class="ornament">✦ ✦ ✦</div>
+                <h1>Livro de Orçamento</h1>
+                <h2>da Fazenda Rockefeller</h2>
+                <div class="ornament">— Honest goods, honest prices —</div>
+            </header>
+
+            <section class="add-section">
+                <h3>Acrescentar ao Pedido</h3>
+                <div class="add-row">
+                    <label class="field grow">
+                        <span>Produto</span>
+                        <select id="produto-select"></select>
+                    </label>
+                    <label class="field qty">
+                        <span>Quantidade</span>
+                        <input type="number" id="qtd-input" min="1" step="1" value="1">
+                    </label>
+                    <button id="add-btn" class="btn btn-primary">+ Adicionar</button>
+                </div>
+                <div class="hint" id="produto-hint"></div>
+            </section>
+
+            <section class="pedido-section">
+                <h3>Itens do Pedido</h3>
+                <div id="itens-lista" class="itens-lista">
+                    <div class="vazio">Nenhum item no pedido ainda, forasteiro.</div>
+                </div>
+            </section>
+
+            <section class="totais-section">
+                <div class="linha-total">
+                    <span class="label">Subtotal:</span>
+                    <span class="valor" id="subtotal-val">$0.00</span>
+                </div>
+                <div class="linha-total">
+                    <label class="field desconto-field">
+                        <span class="label">Desconto:</span>
+                        <input type="number" id="desconto-input" min="0" max="100" step="0.1" value="0">
+                        <span class="percent">%</span>
+                    </label>
+                    <span class="desconto-hint" id="desconto-hint"></span>
+                </div>
+                <div class="linha-total total-final">
+                    <span class="label">TOTAL:</span>
+                    <span class="valor" id="total-val">$0.00</span>
+                </div>
+                <div class="aviso" id="aviso-desconto"></div>
+            </section>
+
+            <section class="acoes-section">
+                <button id="copiar-btn" class="btn btn-primary">📋 Copiar para Discord</button>
+                <button id="limpar-btn" class="btn btn-secondary">🗑 Limpar Pedido</button>
+                <div class="copy-feedback" id="copy-feedback"></div>
+            </section>
+
+            <footer class="footer">
+                <div class="ornament">★ ★ ★</div>
+                <p>Westfox Trading Co. — Estabelecida em 1899</p>
+            </footer>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

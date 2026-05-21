@@ -1,0 +1,455 @@
+/* ===== Livro de Orçamento da Fazenda Rockefeller ===== */
+/* Tema visual inspirado em Red Dead Redemption */
+
+:root {
+    --couro-escuro: #2b1d10;
+    --couro: #3d2817;
+    --papel: #e8d5a8;
+    --papel-claro: #f3e3bc;
+    --papel-sombra: #c9b07e;
+    --vermelho-rdr: #8b2018;
+    --vermelho-escuro: #5a1410;
+    --dourado: #c9a961;
+    --dourado-escuro: #8b7339;
+    --tinta: #1a1208;
+    --tinta-fade: #4a3522;
+    --aviso: #a04020;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    min-height: 100vh;
+    font-family: 'IM Fell English', Georgia, serif;
+    color: var(--tinta);
+    background: var(--couro-escuro);
+    background-image:
+        radial-gradient(ellipse at center, #4a3220 0%, #2b1d10 60%, #1a0f06 100%),
+        repeating-linear-gradient(45deg, transparent 0 2px, rgba(0,0,0,0.04) 2px 4px);
+    background-attachment: fixed;
+    padding: 20px 10px;
+}
+
+/* ============ LIVRO / PAPEL ============ */
+.book {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 8px;
+    background: linear-gradient(135deg, #6b4423 0%, #4a2e16 50%, #6b4423 100%);
+    border-radius: 4px;
+    box-shadow:
+        0 0 0 2px var(--dourado-escuro),
+        0 20px 60px rgba(0,0,0,0.7),
+        inset 0 0 30px rgba(0,0,0,0.4);
+}
+
+.page {
+    background: var(--papel);
+    background-image:
+        radial-gradient(ellipse at 20% 10%, rgba(139,32,24,0.06) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 90%, rgba(74,53,34,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(201,176,126,0.3) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(74,53,34,0.02) 3px 4px),
+        repeating-linear-gradient(90deg, transparent 0 3px, rgba(74,53,34,0.02) 3px 4px);
+    padding: 40px 36px;
+    border-radius: 2px;
+    box-shadow:
+        inset 0 0 80px rgba(139,90,40,0.25),
+        inset 0 0 8px rgba(74,53,34,0.4);
+    position: relative;
+}
+
+.page::before, .page::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    height: 30px;
+    pointer-events: none;
+}
+.page::before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(74,53,34,0.35), transparent);
+}
+.page::after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(74,53,34,0.35), transparent);
+}
+
+/* ============ HEADER ============ */
+.header {
+    text-align: center;
+    border-bottom: 3px double var(--tinta-fade);
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+}
+
+.header h1 {
+    font-family: 'Rye', 'Special Elite', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    color: var(--vermelho-rdr);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.2), 2px 2px 6px rgba(0,0,0,0.15);
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.header h2 {
+    font-family: 'Rye', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    color: var(--tinta);
+    margin-top: 6px;
+    letter-spacing: 1px;
+}
+
+.ornament {
+    font-family: 'Special Elite', monospace;
+    color: var(--dourado-escuro);
+    font-size: 16px;
+    letter-spacing: 8px;
+    margin: 12px 0;
+}
+
+/* ============ SEÇÕES ============ */
+section {
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed rgba(74,53,34,0.4);
+}
+
+section:last-of-type {
+    border-bottom: none;
+}
+
+h3 {
+    font-family: 'Rye', serif;
+    font-size: 22px;
+    color: var(--vermelho-escuro);
+    margin-bottom: 16px;
+    letter-spacing: 1.5px;
+    text-align: center;
+}
+
+h3::before, h3::after {
+    content: " ✦ ";
+    color: var(--dourado-escuro);
+    font-size: 14px;
+}
+
+/* ============ FORMULÁRIOS ============ */
+.add-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.field.grow { flex: 1 1 240px; }
+.field.qty { flex: 0 0 110px; }
+
+.field > span {
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    color: var(--tinta-fade);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+select, input[type="number"] {
+    font-family: 'Special Elite', monospace;
+    font-size: 16px;
+    padding: 10px 12px;
+    border: 2px solid var(--tinta-fade);
+    background: var(--papel-claro);
+    color: var(--tinta);
+    border-radius: 2px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+    width: 100%;
+}
+
+select:focus, input:focus {
+    outline: none;
+    border-color: var(--vermelho-rdr);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15), 0 0 0 2px rgba(139,32,24,0.3);
+}
+
+.hint {
+    margin-top: 8px;
+    font-style: italic;
+    color: var(--tinta-fade);
+    font-size: 14px;
+    min-height: 20px;
+    text-align: center;
+}
+
+/* ============ BOTÕES ============ */
+.btn {
+    font-family: 'Rye', serif;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    padding: 12px 22px;
+    border: 2px solid var(--tinta);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+
+.btn-primary {
+    background: var(--vermelho-rdr);
+    color: var(--papel-claro);
+    border-color: var(--vermelho-escuro);
+}
+
+.btn-primary:hover {
+    background: var(--vermelho-escuro);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+}
+
+.btn-primary:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+}
+
+.btn-secondary {
+    background: var(--papel-sombra);
+    color: var(--tinta);
+}
+
+.btn-secondary:hover {
+    background: var(--dourado);
+    transform: translate(-1px, -1px);
+}
+
+/* ============ LISTA DE ITENS ============ */
+.itens-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.vazio {
+    text-align: center;
+    font-style: italic;
+    color: var(--tinta-fade);
+    padding: 24px;
+    border: 1px dashed var(--tinta-fade);
+    border-radius: 2px;
+}
+
+.item-row {
+    display: grid;
+    grid-template-columns: 1fr 90px 130px 90px 36px;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.25);
+    border: 1px solid rgba(74,53,34,0.3);
+    border-left: 4px solid var(--vermelho-rdr);
+    border-radius: 2px;
+}
+
+.item-row .nome {
+    font-family: 'IM Fell English', serif;
+    font-size: 18px;
+    color: var(--tinta);
+}
+
+.item-row .nome small {
+    display: block;
+    font-size: 11px;
+    color: var(--tinta-fade);
+    font-family: 'Special Elite', monospace;
+}
+
+.item-row input[type="number"] {
+    padding: 6px 8px;
+    font-size: 14px;
+}
+
+.item-row .subtotal {
+    text-align: right;
+    font-family: 'Special Elite', monospace;
+    font-size: 16px;
+    color: var(--vermelho-escuro);
+    font-weight: bold;
+}
+
+.btn-remover {
+    background: transparent;
+    border: 1px solid var(--vermelho-escuro);
+    color: var(--vermelho-escuro);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1;
+    transition: all 0.15s;
+}
+
+.btn-remover:hover {
+    background: var(--vermelho-rdr);
+    color: var(--papel-claro);
+}
+
+.preco-warning {
+    border-color: var(--aviso) !important;
+    background: rgba(160,64,32,0.15) !important;
+}
+
+/* ============ TOTAIS ============ */
+.totais-section {
+    background: rgba(74,53,34,0.08);
+    padding: 20px 24px;
+    border-radius: 2px;
+    border: 1px solid rgba(74,53,34,0.3);
+}
+
+.linha-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.linha-total .label {
+    font-family: 'Special Elite', monospace;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--tinta);
+}
+
+.linha-total .valor {
+    font-family: 'Special Elite', monospace;
+    font-size: 20px;
+    color: var(--tinta);
+}
+
+.total-final {
+    border-top: 3px double var(--tinta-fade);
+    padding-top: 14px;
+    margin-top: 8px;
+}
+
+.total-final .label {
+    font-family: 'Rye', serif;
+    font-size: 20px;
+    color: var(--vermelho-rdr);
+    letter-spacing: 3px;
+}
+
+.total-final .valor {
+    font-size: 28px;
+    color: var(--vermelho-rdr);
+    font-weight: bold;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.1);
+}
+
+.desconto-field {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+.desconto-field input {
+    width: 90px;
+    padding: 6px 8px;
+}
+
+.desconto-field .percent {
+    font-family: 'Special Elite', monospace;
+    font-size: 18px;
+}
+
+.desconto-hint {
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    color: var(--tinta-fade);
+    font-style: italic;
+}
+
+.aviso {
+    margin-top: 10px;
+    color: var(--vermelho-rdr);
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    min-height: 20px;
+}
+
+/* ============ AÇÕES ============ */
+.acoes-section {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-bottom: none;
+}
+
+.copy-feedback {
+    width: 100%;
+    text-align: center;
+    color: var(--vermelho-escuro);
+    font-style: italic;
+    min-height: 22px;
+    margin-top: 6px;
+    font-family: 'Special Elite', monospace;
+}
+
+/* ============ FOOTER ============ */
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 3px double var(--tinta-fade);
+}
+
+.footer p {
+    font-family: 'Special Elite', monospace;
+    color: var(--tinta-fade);
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-top: 8px;
+}
+
+/* ============ MOBILE ============ */
+@media (max-width: 640px) {
+    body { padding: 8px 4px; }
+    .page { padding: 24px 16px; }
+
+    .item-row {
+        grid-template-columns: 1fr 36px;
+        grid-template-areas:
+            "nome remover"
+            "qtd qtd"
+            "preco preco"
+            "subtotal subtotal";
+        gap: 8px;
+    }
+    .item-row .nome { grid-area: nome; }
+    .item-row .btn-remover { grid-area: remover; justify-self: end; }
+    .item-row .qtd-wrap { grid-area: qtd; }
+    .item-row .preco-wrap { grid-area: preco; }
+    .item-row .subtotal { grid-area: subtotal; text-align: right; }
+
+    .add-row { flex-direction: column; }
+    .add-row .field { width: 100%; flex: 1 1 auto; }
+    .add-row .btn { width: 100%; }
+
+    .acoes-section .btn { width: 100%; }
+}
