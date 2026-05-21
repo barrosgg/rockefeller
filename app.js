@@ -342,7 +342,7 @@ function adicionarItem() {
     }
     registrarRecente(p.nome);
 
-    $("qtd-input").value = 1;
+    $("qtd-input").value = "";
     $("produto-busca").value = "";
     combo.selecionado = null;
     $("produto-hint").textContent = "";
